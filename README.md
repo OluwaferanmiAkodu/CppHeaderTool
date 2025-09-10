@@ -101,12 +101,12 @@ CppHeaderTool instead provides a **lightweight, flexible parsing framework**. Us
 
 ## 📂 Repository Structure  
 ```plaintext
-├── app/                 # Example application to show  how to generate code from parser ast
-├── example/             # Example CMake project integration with the code generation tool
-├── src/                 # Core parsing framework
-├── test/                # Tests for parser components
-├── stack.yaml           # Stack configuration
-└── README.md            # This file
+├── app/          # Example app: generate code from parsed AST
+├── example/      # Example CMake integration
+├── src/          # Core parsing framework
+├── test/         # Unit tests
+├── stack.yaml    # Stack configuration
+└── README.md     # This file
 ```
 ## 🚀 Getting Started
 
@@ -129,7 +129,7 @@ and stack and cabal recommended versions according to ghcup.
   - execute `stack run -- --code <file-path>` to print the generated c++ to the console
   - execute `stack run -- --code -o <output-path> <file-path>` to save the generated c++ to a directory
 
-### Building the CMake Example
+### 🏗️ CMake Example
 
 - Navigate to the root directory
 - Execute the command `stack build`
