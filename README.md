@@ -53,16 +53,42 @@ CppHeaderTool instead provides a **lightweight, flexible parsing framework**. Us
 
 ## 📂 Repository Structure  
 ```plaintext
-├── app/                 # Example applications
-│   ├── CodeGenDemo.hs   # Demo: generate C++ from parsed AST
-│   └── DumpJSON.hs      # Demo: dump parsed header to JSON
-├── example/             # Example CMake project integration
+├── app/                 # Example application to show  how to generate code from parser ast
+├── example/             # Example CMake project integration with the code generation tool
 ├── src/                 # Core parsing framework
 ├── test/                # Tests for parser components
 ├── stack.yaml           # Stack configuration
 └── README.md            # This file
 ```
+## 🚀 Getting Started
 
+### 🔧 Prerequisites
+
+- Follow the instructions for installing ghcup [on the Haskell.org website](https://www.haskell.org/ghcup/). Answer A
+then Y then Y to the three prompts.
+
+- If you are using VSCode, install the haskell extension after installing ghcup and it
+will automatically initialise the toolchain once you open a Haskell file in a properlyconfigured project folder. If not using VSCode, please install ghc version 9.4.8;
+and stack and cabal recommended versions according to ghcup.
+
+### 🏃‍♂ Running
+
+- Clone the repository
+
+- Navigate to the root directory and:
+  - execute `stack run -- --json <file-path>` to print the json ast to the console
+  - execute `stack run -- --json -o <output-path> <file-path>` to save the json ast to a directory
+  - execute `stack run -- --code <file-path>` to print the generated c++ to the console
+  - execute `stack run -- --code -o <output-path> <file-path>` to save the generated c++ to a directory
+
+### Building the CMake Example
+
+- Navigate to the root directory
+- Execute the command `stack build`
+- Copy `.stack-work/install/../CppHeaderTool-exe.*` to the `example/`
+- execute `cmake -B build -DGENERATE_CODE_AT_BUILD=ON`
+- execute `cmake --build build`
+    
 ## ⚠️ Disclaimer  
 
 - This project is a **work in progress** and not a full C++ parser.  
