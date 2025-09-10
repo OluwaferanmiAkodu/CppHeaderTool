@@ -34,13 +34,61 @@ CppHeaderTool instead provides a **lightweight, flexible parsing framework**. Us
 ### Example Workflow  
 1. Input C++ header:  
    ```cpp
-   struct Person {
-     std::string name;
-     int age;
+   struct [[ Reflected ]] Person {
+   	std::string name;
+   	int age;
    };
-
-   enum Color { Red, Green, Blue };
-
+   
+   enum class [[Default(Red)]] Color : uint8_t { 
+   	Red, Green, Blue 
+   };
+   ```
+2. Output json
+   ```json
+   [
+    {
+        "astNodeType": "class",
+        "children": [
+            {
+                "astNodeType": "memberVariable",
+                "name": "name",
+                "type": "std::string"
+            },
+            {
+                "astNodeType": "memberVariable",
+                "name": "age",
+                "type": "int"
+            }
+        ],
+        "isReflected": true,
+        "isSerialized": false,
+        "name": "Person",
+        "parent": ""
+    },
+    {
+        "astNodeType": "enum",
+        "children": [
+            {
+                "astNodeType": "enumerator",
+                "name": "Red"
+            },
+            {
+                "astNodeType": "enumerator",
+                "name": "Green"
+            },
+            {
+                "astNodeType": "enumerator",
+                "name": "Blue"
+            }
+        ],
+        "default": "Red",
+        "isReflected": false,
+        "isSerialized": false,
+        "name": "Color",
+        "parent": "uint8_t"
+    }
+   ]
+   ```
 ## 🛠️ Technologies  
 
 - **Language**: Haskell (GHC 9.x)  
