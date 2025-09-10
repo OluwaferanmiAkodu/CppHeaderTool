@@ -42,8 +42,6 @@ library
   build-depends:
       base >=4.7 && <5
     , containers
-    , directory
-    , filepath
     , megaparsec
   default-language: Haskell2010
 
@@ -60,7 +58,10 @@ executable CppHeaderTool-exe
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       CppHeaderTool
+    , aeson
+    , aeson-pretty
     , base >=4.7 && <5
+    , bytestring
     , containers
     , directory
     , filepath
@@ -81,7 +82,5 @@ test-suite CppHeaderTool-test
       CppHeaderTool
     , base >=4.7 && <5
     , containers
-    , directory
-    , filepath
     , megaparsec
   default-language: Haskell2010

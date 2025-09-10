@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Util</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Megaparsec</span></span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span id="applyParsers"><span class="annot"><span class="annottext">applyParsers :: [m a] -&gt; m a
+</span><a href="Util.html#applyParsers"><span class="hs-identifier hs-var hs-var">applyParsers</span></a></span></span><span> </span><span id="local-6989586621679068263"><span class="annot"><span class="annottext">[m a]
+</span><a href="#local-6989586621679068263"><span class="hs-identifier hs-var">parsers</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[m a] -&gt; m a
+forall (f :: * -&gt; *) (m :: * -&gt; *) a.
+(Foldable f, Alternative m) =&gt;
+f (m a) -&gt; m a
+</span><span class="hs-identifier hs-var">choice</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(m a -&gt; m a) -&gt; [m a] -&gt; [m a]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="annot"><span class="annottext">m a -&gt; m a
+forall a. m a -&gt; m a
+forall e s (m :: * -&gt; *) a. MonadParsec e s m =&gt; m a -&gt; m a
+</span><span class="hs-identifier hs-var">try</span></span><span> </span><span class="annot"><span class="annottext">[m a]
+</span><a href="#local-6989586621679068263"><span class="hs-identifier hs-var">parsers</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>
+</span><span id="line-7"></span><span id="local-6989586621679068154"><span id="local-6989586621679068155"><span id="local-6989586621679068156"><span id="local-6989586621679068158"><span class="annot"><a href="Util.html#applyParsersUntil"><span class="hs-identifier hs-type">applyParsersUntil</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679068154"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Stream</span></span><span> </span><span class="annot"><a href="#local-6989586621679068155"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068154"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068155"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068156"><span class="hs-identifier hs-type">c</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068154"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068155"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068158"><span class="hs-identifier hs-type">d</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068154"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068155"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679068156"><span class="hs-identifier hs-type">c</span></a></span><span class="hs-special">]</span></span></span></span></span><span>
+</span><span id="line-8"></span><span id="applyParsersUntil"><span class="annot"><span class="annottext">applyParsersUntil :: forall a b c d.
+(Ord a, Stream b) =&gt;
+[Parsec a b c] -&gt; Parsec a b d -&gt; Parsec a b [c]
+</span><a href="Util.html#applyParsersUntil"><span class="hs-identifier hs-var hs-var">applyParsersUntil</span></a></span></span><span> </span><span id="local-6989586621679068274"><span class="annot"><span class="annottext">[Parsec a b c]
+</span><a href="#local-6989586621679068274"><span class="hs-identifier hs-var">parsers</span></a></span></span><span> </span><span id="local-6989586621679068275"><span class="annot"><span class="annottext">Parsec a b d
+</span><a href="#local-6989586621679068275"><span class="hs-identifier hs-var">terminator</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[c] -&gt; ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068276"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-9"></span><span>    </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679068276"><span class="annot"><span class="annottext">helper :: [c] -&gt; ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068276"><span class="hs-identifier hs-var hs-var">helper</span></a></span></span><span> </span><span id="local-6989586621679068290"><span class="annot"><span class="annottext">[c]
+</span><a href="#local-6989586621679068290"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-10"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679068301"><span class="annot"><span class="annottext">onEnd :: b -&gt; ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068301"><span class="hs-identifier hs-var hs-var">onEnd</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ParsecT a b Identity [c] -&gt; b -&gt; ParsecT a b Identity [c]
+forall a b. a -&gt; b -&gt; a
+</span><span class="hs-identifier hs-var">const</span></span><span> </span><span class="annot"><span class="annottext">(ParsecT a b Identity [c] -&gt; b -&gt; ParsecT a b Identity [c])
+-&gt; ParsecT a b Identity [c] -&gt; b -&gt; ParsecT a b Identity [c]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[c] -&gt; ParsecT a b Identity [c]
+forall a. a -&gt; ParsecT a b Identity a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">([c] -&gt; ParsecT a b Identity [c])
+-&gt; [c] -&gt; ParsecT a b Identity [c]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[c] -&gt; [c]
+forall a. [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">reverse</span></span><span> </span><span class="annot"><span class="annottext">[c]
+</span><a href="#local-6989586621679068290"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><span id="line-11"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679068313"><span class="annot"><span class="annottext">onContinue :: ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068313"><span class="hs-identifier hs-var hs-var">onContinue</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Parsec a b c] -&gt; Parsec a b c
+forall {m :: * -&gt; *} {e} {s} {a}. MonadParsec e s m =&gt; [m a] -&gt; m a
+</span><a href="Util.html#applyParsers"><span class="hs-identifier hs-var">applyParsers</span></a></span><span> </span><span class="annot"><span class="annottext">[Parsec a b c]
+</span><a href="#local-6989586621679068274"><span class="hs-identifier hs-var">parsers</span></a></span><span> </span><span class="annot"><span class="annottext">Parsec a b c
+-&gt; (c -&gt; ParsecT a b Identity [c]) -&gt; ParsecT a b Identity [c]
+forall a b.
+ParsecT a b Identity a
+-&gt; (a -&gt; ParsecT a b Identity b) -&gt; ParsecT a b Identity b
+forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="annot"><span class="annottext">[c] -&gt; ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068276"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="annot"><span class="annottext">([c] -&gt; ParsecT a b Identity [c])
+-&gt; (c -&gt; [c]) -&gt; c -&gt; ParsecT a b Identity [c]
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">c -&gt; [c] -&gt; [c]
+forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span class="annot"><span class="annottext">[c]
+</span><a href="#local-6989586621679068290"><span class="hs-identifier hs-var">xs</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span>
+</span><span id="line-13"></span><span>            </span><span id="local-6989586621679068315"><span class="annot"><span class="annottext">Maybe d
+</span><a href="#local-6989586621679068315"><span class="hs-identifier hs-var">isEnd</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec a b d -&gt; ParsecT a b Identity (Maybe d)
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f (Maybe a)
+</span><span class="hs-identifier hs-var">optional</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec a b d -&gt; Parsec a b d
+forall a. ParsecT a b Identity a -&gt; ParsecT a b Identity a
+forall e s (m :: * -&gt; *) a. MonadParsec e s m =&gt; m a -&gt; m a
+</span><span class="hs-identifier hs-var">lookAhead</span></span><span> </span><span class="annot"><span class="annottext">Parsec a b d
+</span><a href="#local-6989586621679068275"><span class="hs-identifier hs-var">terminator</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span>            </span><span class="annot"><span class="annottext">ParsecT a b Identity [c]
+-&gt; (d -&gt; ParsecT a b Identity [c])
+-&gt; Maybe d
+-&gt; ParsecT a b Identity [c]
+forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
+</span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="annot"><span class="annottext">ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068313"><span class="hs-identifier hs-var">onContinue</span></a></span><span> </span><span class="annot"><span class="annottext">d -&gt; ParsecT a b Identity [c]
+forall {b}. b -&gt; ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068301"><span class="hs-identifier hs-var">onEnd</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe d
+</span><a href="#local-6989586621679068315"><span class="hs-identifier hs-var">isEnd</span></a></span><span>
+</span><span id="line-15"></span><span>
+</span><span id="line-16"></span><span id="local-6989586621679068319"><span id="local-6989586621679068320"><span id="local-6989586621679068321"><span id="local-6989586621679068322"><span class="annot"><a href="Util.html#applyParsersUntil%27"><span class="hs-identifier hs-type">applyParsersUntil'</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679068319"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Stream</span></span><span> </span><span class="annot"><a href="#local-6989586621679068320"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068319"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068320"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068321"><span class="hs-identifier hs-type">c</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068319"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068320"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068322"><span class="hs-identifier hs-type">d</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068319"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068320"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679068321"><span class="hs-identifier hs-type">c</span></a></span><span class="hs-special">]</span></span></span></span></span><span>
+</span><span id="line-17"></span><span id="applyParsersUntil%27"><span class="annot"><span class="annottext">applyParsersUntil' :: forall a b c d.
+(Ord a, Stream b) =&gt;
+[Parsec a b c] -&gt; Parsec a b d -&gt; Parsec a b [c]
+</span><a href="Util.html#applyParsersUntil%27"><span class="hs-identifier hs-var hs-var">applyParsersUntil'</span></a></span></span><span> </span><span id="local-6989586621679068331"><span class="annot"><span class="annottext">[Parsec a b c]
+</span><a href="#local-6989586621679068331"><span class="hs-identifier hs-var">parsers</span></a></span></span><span> </span><span id="local-6989586621679068332"><span class="annot"><span class="annottext">Parsec a b d
+</span><a href="#local-6989586621679068332"><span class="hs-identifier hs-var">terminator</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[c] -&gt; ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068333"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-18"></span><span>    </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679068333"><span class="annot"><span class="annottext">helper :: [c] -&gt; ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068333"><span class="hs-identifier hs-var hs-var">helper</span></a></span></span><span> </span><span id="local-6989586621679068344"><span class="annot"><span class="annottext">[c]
+</span><a href="#local-6989586621679068344"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-19"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679068353"><span class="annot"><span class="annottext">onEnd :: b -&gt; ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068353"><span class="hs-identifier hs-var hs-var">onEnd</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ParsecT a b Identity [c] -&gt; b -&gt; ParsecT a b Identity [c]
+forall a b. a -&gt; b -&gt; a
+</span><span class="hs-identifier hs-var">const</span></span><span> </span><span class="annot"><span class="annottext">(ParsecT a b Identity [c] -&gt; b -&gt; ParsecT a b Identity [c])
+-&gt; ParsecT a b Identity [c] -&gt; b -&gt; ParsecT a b Identity [c]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[c] -&gt; ParsecT a b Identity [c]
+forall a. a -&gt; ParsecT a b Identity a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">([c] -&gt; ParsecT a b Identity [c])
+-&gt; [c] -&gt; ParsecT a b Identity [c]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">[c] -&gt; [c]
+forall a. [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">reverse</span></span><span> </span><span class="annot"><span class="annottext">[c]
+</span><a href="#local-6989586621679068344"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><span id="line-20"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679068366"><span class="annot"><span class="annottext">onContinue :: ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068366"><span class="hs-identifier hs-var hs-var">onContinue</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-21"></span><span>                    </span><span id="local-6989586621679068367"><span class="annot"><span class="annottext">Maybe c
+</span><a href="#local-6989586621679068367"><span class="hs-identifier hs-var">hit</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec a b c -&gt; ParsecT a b Identity (Maybe c)
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f (Maybe a)
+</span><span class="hs-identifier hs-var">optional</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Parsec a b c] -&gt; Parsec a b c
+forall {m :: * -&gt; *} {e} {s} {a}. MonadParsec e s m =&gt; [m a] -&gt; m a
+</span><a href="Util.html#applyParsers"><span class="hs-identifier hs-var">applyParsers</span></a></span><span> </span><span class="annot"><span class="annottext">[Parsec a b c]
+</span><a href="#local-6989586621679068331"><span class="hs-identifier hs-var">parsers</span></a></span><span class="hs-special">)</span><span> </span><span>
+</span><span id="line-22"></span><span>                    </span><span class="annot"><span class="annottext">ParsecT a b Identity [c]
+-&gt; (c -&gt; ParsecT a b Identity [c])
+-&gt; Maybe c
+-&gt; ParsecT a b Identity [c]
+forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
+</span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ParsecT a b Identity (Token b)
+forall e s (m :: * -&gt; *). MonadParsec e s m =&gt; m (Token s)
+</span><span class="hs-identifier hs-var">anySingle</span></span><span> </span><span class="annot"><span class="annottext">ParsecT a b Identity (Token b)
+-&gt; (Token b -&gt; ParsecT a b Identity [c])
+-&gt; ParsecT a b Identity [c]
+forall a b.
+ParsecT a b Identity a
+-&gt; (a -&gt; ParsecT a b Identity b) -&gt; ParsecT a b Identity b
+forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><span class="hs-operator hs-var">&gt;&gt;=</span></span><span> </span><span class="annot"><span class="annottext">ParsecT a b Identity [c] -&gt; Token b -&gt; ParsecT a b Identity [c]
+forall a b. a -&gt; b -&gt; a
+</span><span class="hs-identifier hs-var">const</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[c] -&gt; ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068333"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="annot"><span class="annottext">[c]
+</span><a href="#local-6989586621679068344"><span class="hs-identifier hs-var">xs</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[c] -&gt; ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068333"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="annot"><span class="annottext">([c] -&gt; ParsecT a b Identity [c])
+-&gt; (c -&gt; [c]) -&gt; c -&gt; ParsecT a b Identity [c]
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">c -&gt; [c] -&gt; [c]
+forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span class="annot"><span class="annottext">[c]
+</span><a href="#local-6989586621679068344"><span class="hs-identifier hs-var">xs</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Maybe c
+</span><a href="#local-6989586621679068367"><span class="hs-identifier hs-var">hit</span></a></span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span>            </span><span id="local-6989586621679068369"><span class="annot"><span class="annottext">Maybe d
+</span><a href="#local-6989586621679068369"><span class="hs-identifier hs-var">isEnd</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Parsec a b d -&gt; ParsecT a b Identity (Maybe d)
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f (Maybe a)
+</span><span class="hs-identifier hs-var">optional</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Parsec a b d -&gt; Parsec a b d
+forall a. ParsecT a b Identity a -&gt; ParsecT a b Identity a
+forall e s (m :: * -&gt; *) a. MonadParsec e s m =&gt; m a -&gt; m a
+</span><span class="hs-identifier hs-var">lookAhead</span></span><span> </span><span class="annot"><span class="annottext">Parsec a b d
+</span><a href="#local-6989586621679068332"><span class="hs-identifier hs-var">terminator</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span>            </span><span class="annot"><span class="annottext">ParsecT a b Identity [c]
+-&gt; (d -&gt; ParsecT a b Identity [c])
+-&gt; Maybe d
+-&gt; ParsecT a b Identity [c]
+forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
+</span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="annot"><span class="annottext">ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068366"><span class="hs-identifier hs-var">onContinue</span></a></span><span> </span><span class="annot"><span class="annottext">d -&gt; ParsecT a b Identity [c]
+forall {b}. b -&gt; ParsecT a b Identity [c]
+</span><a href="#local-6989586621679068353"><span class="hs-identifier hs-var">onEnd</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe d
+</span><a href="#local-6989586621679068369"><span class="hs-identifier hs-var">isEnd</span></a></span><span>
+</span><span id="line-26"></span><span>
+</span><span id="line-27"></span><span>
+</span><span id="line-28"></span><span id="local-6989586621679068370"><span id="local-6989586621679068371"><span id="local-6989586621679068372"><span id="local-6989586621679068373"><span class="annot"><a href="Util.html#%3E%3E%7C"><span class="hs-operator hs-type">(&gt;&gt;|)</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679068370"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Stream</span></span><span> </span><span class="annot"><a href="#local-6989586621679068371"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068370"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068371"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068372"><span class="hs-identifier hs-type">c</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068370"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068371"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068373"><span class="hs-identifier hs-type">d</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068370"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068371"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679068372"><span class="hs-identifier hs-type">c</span></a></span><span class="hs-special">]</span></span></span></span></span><span>
+</span><span id="line-29"></span><span id="%3E%3E%7C"><span class="annot"><span class="annottext">&gt;&gt;| :: forall a b c d.
+(Ord a, Stream b) =&gt;
+[Parsec a b c] -&gt; Parsec a b d -&gt; Parsec a b [c]
+</span><a href="Util.html#%3E%3E%7C"><span class="hs-operator hs-var hs-var">(&gt;&gt;|)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Parsec a b c] -&gt; Parsec a b d -&gt; Parsec a b [c]
+forall a b c d.
+(Ord a, Stream b) =&gt;
+[Parsec a b c] -&gt; Parsec a b d -&gt; Parsec a b [c]
+</span><a href="Util.html#applyParsersUntil"><span class="hs-identifier hs-var">applyParsersUntil</span></a></span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span id="local-6989586621679068379"><span id="local-6989586621679068380"><span id="local-6989586621679068381"><span id="local-6989586621679068382"><span class="annot"><a href="Util.html#%3E%3E%7C%2A"><span class="hs-operator hs-type">(&gt;&gt;|*)</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621679068379"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Stream</span></span><span> </span><span class="annot"><a href="#local-6989586621679068380"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068379"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068380"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068381"><span class="hs-identifier hs-type">c</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068379"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068380"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068382"><span class="hs-identifier hs-type">d</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><a href="#local-6989586621679068379"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068380"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679068381"><span class="hs-identifier hs-type">c</span></a></span><span class="hs-special">]</span></span></span></span></span><span>
+</span><span id="line-32"></span><span id="%3E%3E%7C%2A"><span class="annot"><span class="annottext">&gt;&gt;|* :: forall a b c d.
+(Ord a, Stream b) =&gt;
+[Parsec a b c] -&gt; Parsec a b d -&gt; Parsec a b [c]
+</span><a href="Util.html#%3E%3E%7C%2A"><span class="hs-operator hs-var hs-var">(&gt;&gt;|*)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Parsec a b c] -&gt; Parsec a b d -&gt; Parsec a b [c]
+forall a b c d.
+(Ord a, Stream b) =&gt;
+[Parsec a b c] -&gt; Parsec a b d -&gt; Parsec a b [c]
+</span><a href="Util.html#applyParsersUntil%27"><span class="hs-identifier hs-var">applyParsersUntil'</span></a></span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span id="consumeTill"><span class="annot"><span class="annottext">consumeTill :: m end -&gt; m [Token s]
+</span><a href="Util.html#consumeTill"><span class="hs-identifier hs-var hs-var">consumeTill</span></a></span></span><span> </span><span id="local-6989586621679068420"><span class="annot"><span class="annottext">m end
+</span><a href="#local-6989586621679068420"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">m (Token s) -&gt; m end -&gt; m [Token s]
+forall (m :: * -&gt; *) a end. MonadPlus m =&gt; m a -&gt; m end -&gt; m [a]
+</span><span class="hs-identifier hs-var">manyTill</span></span><span> </span><span class="annot"><span class="annottext">m (Token s)
+forall e s (m :: * -&gt; *). MonadParsec e s m =&gt; m (Token s)
+</span><span class="hs-identifier hs-var">anySingle</span></span><span> </span><span class="annot"><span class="annottext">m end
+</span><a href="#local-6989586621679068420"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-35"></span><span class="hs-comment">{-
+parseEnumDefaultTag :: Parser String
+parseEnumDefaultTag = do
+    _ &lt;- enumDefaultTag
+    _ &lt;- single (Punctuator '(')
+    x &lt;- qualifiedName
+    _ &lt;- single (Punctuator ')')
+    return x
+
+parseEnumTag :: Parser CppAstNode
+parseEnumTag = do
+    _ &lt;- enumTag
+    _ &lt;- single (Punctuator '(')
+    x &lt;- parseEnumDefaultTag
+    _ &lt;- single (Punctuator ')')
+    parseEnum True x
+
+parseClassTag :: Parser CppAstNode
+parseClassTag = do
+    _ &lt;- classTag
+    _ &lt;- optional (chunk [Punctuator '(', Punctuator ')'])
+    parseClass True
+
+    enumDefaultTag :: Parser CppToken
+enumDefaultTag = single (Tag &quot;SMX_ENUM_DEFAULT&quot;)
+
+enumTag :: Parser CppToken
+enumTag = single (Tag &quot;SMX_ENUM&quot;)
+
+classTag :: Parser CppToken
+classTag = single (Tag &quot;SMX_CLASS&quot;)
+
+propertyTag :: Parser CppToken
+propertyTag = single (Tag &quot;SMX_PROPERTY&quot;)
+
+parseProperty :: Parser CppAstNode
+parseProperty = do
+    _ &lt;- propertyTag
+    _ &lt;- optional (chunk [Punctuator '(', Punctuator ')'])
+    _ &lt;- qualifiedName
+    x &lt;- identifier
+    _ &lt;- manyTill anySingle (lookAhead (single (Punctuator ';')))
+    return $ Property x
+
+
+parseEnumMember :: Parser CppAstNode
+parseEnumMember = do
+    x &lt;- identifier
+    _ &lt;- manyTill anySingle (lookAhead (satisfy (\y -&gt; y == Punctuator ',' || y == Punctuator '}')))
+    return $ EnumMember x
+    -}</span></pre></body></html>

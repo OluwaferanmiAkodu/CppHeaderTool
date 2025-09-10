@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">ParserTypes</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Megaparsec</span></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Void</span></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="LexerTypes.html"><span class="hs-identifier">LexerTypes</span></a></span><span>
+</span><span id="line-6"></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">type</span><span> </span><span id="Parser"><span class="annot"><a href="ParserTypes.html#Parser"><span class="hs-identifier hs-var">Parser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Parsec</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">type</span><span> </span><span id="CppAttributeSpecifier"><span class="annot"><a href="ParserTypes.html#CppAttributeSpecifier"><span class="hs-identifier hs-var">CppAttributeSpecifier</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">data</span><span> </span><span id="CppAccessSpecifier"><span class="annot"><a href="ParserTypes.html#CppAccessSpecifier"><span class="hs-identifier hs-var">CppAccessSpecifier</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Public"><span class="annot"><a href="ParserTypes.html#Public"><span class="hs-identifier hs-var">Public</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Private"><span class="annot"><a href="ParserTypes.html#Private"><span class="hs-identifier hs-var">Private</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="Protected"><span class="annot"><a href="ParserTypes.html#Protected"><span class="hs-identifier hs-var">Protected</span></a></span></span><span>
+</span><span id="line-12"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679067751"><span id="local-6989586621679067753"><span id="local-6989586621679067757"><span class="annot"><span class="annottext">Int -&gt; CppAccessSpecifier -&gt; ShowS
+[CppAccessSpecifier] -&gt; ShowS
+CppAccessSpecifier -&gt; String
+(Int -&gt; CppAccessSpecifier -&gt; ShowS)
+-&gt; (CppAccessSpecifier -&gt; String)
+-&gt; ([CppAccessSpecifier] -&gt; ShowS)
+-&gt; Show CppAccessSpecifier
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: Int -&gt; CppAccessSpecifier -&gt; ShowS
+showsPrec :: Int -&gt; CppAccessSpecifier -&gt; ShowS
+$cshow :: CppAccessSpecifier -&gt; String
+show :: CppAccessSpecifier -&gt; String
+$cshowList :: [CppAccessSpecifier] -&gt; ShowS
+showList :: [CppAccessSpecifier] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">data</span><span> </span><span id="CppTypeSpecifier"><span class="annot"><a href="ParserTypes.html#CppTypeSpecifier"><span class="hs-identifier hs-var">CppTypeSpecifier</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CppTypeSpecifier"><span class="annot"><a href="ParserTypes.html#CppTypeSpecifier"><span class="hs-identifier hs-var">CppTypeSpecifier</span></a></span></span><span>
+</span><span id="line-15"></span><span>    </span><span class="hs-special">{</span><span>
+</span><span id="line-16"></span><span>        </span><span id="typeSpecifierName"><span class="annot"><span class="annottext">CppTypeSpecifier -&gt; String
+</span><a href="ParserTypes.html#typeSpecifierName"><span class="hs-identifier hs-var hs-var">typeSpecifierName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-17"></span><span>        </span><span id="typeAttributeSpecifiers"><span class="annot"><span class="annottext">CppTypeSpecifier -&gt; [CppAttributeSpecifier]
+</span><a href="ParserTypes.html#typeAttributeSpecifiers"><span class="hs-identifier hs-var hs-var">typeAttributeSpecifiers</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="ParserTypes.html#CppAttributeSpecifier"><span class="hs-identifier hs-type">CppAttributeSpecifier</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-18"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-19"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679067764"><span id="local-6989586621679067773"><span id="local-6989586621679067777"><span class="annot"><span class="annottext">Int -&gt; CppTypeSpecifier -&gt; ShowS
+[CppTypeSpecifier] -&gt; ShowS
+CppTypeSpecifier -&gt; String
+(Int -&gt; CppTypeSpecifier -&gt; ShowS)
+-&gt; (CppTypeSpecifier -&gt; String)
+-&gt; ([CppTypeSpecifier] -&gt; ShowS)
+-&gt; Show CppTypeSpecifier
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: Int -&gt; CppTypeSpecifier -&gt; ShowS
+showsPrec :: Int -&gt; CppTypeSpecifier -&gt; ShowS
+$cshow :: CppTypeSpecifier -&gt; String
+show :: CppTypeSpecifier -&gt; String
+$cshowList :: [CppTypeSpecifier] -&gt; ShowS
+showList :: [CppTypeSpecifier] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span>
+</span><span id="line-21"></span><span class="hs-keyword">data</span><span> </span><span id="CppEnumHead"><span class="annot"><a href="ParserTypes.html#CppEnumHead"><span class="hs-identifier hs-var">CppEnumHead</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CppEnumHead"><span class="annot"><a href="ParserTypes.html#CppEnumHead"><span class="hs-identifier hs-var">CppEnumHead</span></a></span></span><span>
+</span><span id="line-22"></span><span>    </span><span class="hs-special">{</span><span>
+</span><span id="line-23"></span><span>        </span><span id="enumAttributeSpecifiers"><span class="annot"><span class="annottext">CppEnumHead -&gt; [CppAttributeSpecifier]
+</span><a href="ParserTypes.html#enumAttributeSpecifiers"><span class="hs-identifier hs-var hs-var">enumAttributeSpecifiers</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="ParserTypes.html#CppAttributeSpecifier"><span class="hs-identifier hs-type">CppAttributeSpecifier</span></a></span><span class="hs-special">]</span><span class="hs-special">,</span><span>
+</span><span id="line-24"></span><span>        </span><span id="enumHeadName"><span class="annot"><span class="annottext">CppEnumHead -&gt; String
+</span><a href="ParserTypes.html#enumHeadName"><span class="hs-identifier hs-var hs-var">enumHeadName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-25"></span><span>        </span><span id="enumBaseClause"><span class="annot"><span class="annottext">CppEnumHead -&gt; [CppTypeSpecifier]
+</span><a href="ParserTypes.html#enumBaseClause"><span class="hs-identifier hs-var hs-var">enumBaseClause</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="ParserTypes.html#CppTypeSpecifier"><span class="hs-identifier hs-type">CppTypeSpecifier</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-26"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-27"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679067787"><span id="local-6989586621679067796"><span id="local-6989586621679067800"><span class="annot"><span class="annottext">Int -&gt; CppEnumHead -&gt; ShowS
+[CppEnumHead] -&gt; ShowS
+CppEnumHead -&gt; String
+(Int -&gt; CppEnumHead -&gt; ShowS)
+-&gt; (CppEnumHead -&gt; String)
+-&gt; ([CppEnumHead] -&gt; ShowS)
+-&gt; Show CppEnumHead
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: Int -&gt; CppEnumHead -&gt; ShowS
+showsPrec :: Int -&gt; CppEnumHead -&gt; ShowS
+$cshow :: CppEnumHead -&gt; String
+show :: CppEnumHead -&gt; String
+$cshowList :: [CppEnumHead] -&gt; ShowS
+showList :: [CppEnumHead] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span class="hs-keyword">data</span><span> </span><span id="CppBaseSpecifier"><span class="annot"><a href="ParserTypes.html#CppBaseSpecifier"><span class="hs-identifier hs-var">CppBaseSpecifier</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CppBaseSpecifier"><span class="annot"><a href="ParserTypes.html#CppBaseSpecifier"><span class="hs-identifier hs-var">CppBaseSpecifier</span></a></span></span><span>
+</span><span id="line-30"></span><span>    </span><span class="hs-special">{</span><span>
+</span><span id="line-31"></span><span>        </span><span id="baseTypeSpecifier"><span class="annot"><span class="annottext">CppBaseSpecifier -&gt; String
+</span><a href="ParserTypes.html#baseTypeSpecifier"><span class="hs-identifier hs-var hs-var">baseTypeSpecifier</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-32"></span><span>        </span><span id="baseAccessSpecifier"><span class="annot"><span class="annottext">CppBaseSpecifier -&gt; CppAccessSpecifier
+</span><a href="ParserTypes.html#baseAccessSpecifier"><span class="hs-identifier hs-var hs-var">baseAccessSpecifier</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="ParserTypes.html#CppAccessSpecifier"><span class="hs-identifier hs-type">CppAccessSpecifier</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-33"></span><span>        </span><span id="baseAttributeSpecifiers"><span class="annot"><span class="annottext">CppBaseSpecifier -&gt; [CppAttributeSpecifier]
+</span><a href="ParserTypes.html#baseAttributeSpecifiers"><span class="hs-identifier hs-var hs-var">baseAttributeSpecifiers</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="ParserTypes.html#CppAttributeSpecifier"><span class="hs-identifier hs-type">CppAttributeSpecifier</span></a></span><span class="hs-special">]</span><span class="hs-special">,</span><span>
+</span><span id="line-34"></span><span>        </span><span id="isBaseVirtual"><span class="annot"><span class="annottext">CppBaseSpecifier -&gt; Bool
+</span><a href="ParserTypes.html#isBaseVirtual"><span class="hs-identifier hs-var hs-var">isBaseVirtual</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-35"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-36"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679067809"><span id="local-6989586621679067819"><span id="local-6989586621679067823"><span class="annot"><span class="annottext">Int -&gt; CppBaseSpecifier -&gt; ShowS
+[CppBaseSpecifier] -&gt; ShowS
+CppBaseSpecifier -&gt; String
+(Int -&gt; CppBaseSpecifier -&gt; ShowS)
+-&gt; (CppBaseSpecifier -&gt; String)
+-&gt; ([CppBaseSpecifier] -&gt; ShowS)
+-&gt; Show CppBaseSpecifier
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: Int -&gt; CppBaseSpecifier -&gt; ShowS
+showsPrec :: Int -&gt; CppBaseSpecifier -&gt; ShowS
+$cshow :: CppBaseSpecifier -&gt; String
+show :: CppBaseSpecifier -&gt; String
+$cshowList :: [CppBaseSpecifier] -&gt; ShowS
+showList :: [CppBaseSpecifier] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">data</span><span> </span><span id="CppClassHead"><span class="annot"><a href="ParserTypes.html#CppClassHead"><span class="hs-identifier hs-var">CppClassHead</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CppClassHead"><span class="annot"><a href="ParserTypes.html#CppClassHead"><span class="hs-identifier hs-var">CppClassHead</span></a></span></span><span>
+</span><span id="line-39"></span><span>    </span><span class="hs-special">{</span><span>
+</span><span id="line-40"></span><span>        </span><span id="classAttributeSpecifiers"><span class="annot"><span class="annottext">CppClassHead -&gt; [CppAttributeSpecifier]
+</span><a href="ParserTypes.html#classAttributeSpecifiers"><span class="hs-identifier hs-var hs-var">classAttributeSpecifiers</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="ParserTypes.html#CppAttributeSpecifier"><span class="hs-identifier hs-type">CppAttributeSpecifier</span></a></span><span class="hs-special">]</span><span class="hs-special">,</span><span>
+</span><span id="line-41"></span><span>        </span><span id="classHeadName"><span class="annot"><span class="annottext">CppClassHead -&gt; String
+</span><a href="ParserTypes.html#classHeadName"><span class="hs-identifier hs-var hs-var">classHeadName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-42"></span><span>        </span><span id="isClassFinal"><span class="annot"><span class="annottext">CppClassHead -&gt; Bool
+</span><a href="ParserTypes.html#isClassFinal"><span class="hs-identifier hs-var hs-var">isClassFinal</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span class="hs-special">,</span><span>
+</span><span id="line-43"></span><span>        </span><span id="classBaseClause"><span class="annot"><span class="annottext">CppClassHead -&gt; [CppBaseSpecifier]
+</span><a href="ParserTypes.html#classBaseClause"><span class="hs-identifier hs-var hs-var">classBaseClause</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="ParserTypes.html#CppBaseSpecifier"><span class="hs-identifier hs-type">CppBaseSpecifier</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-44"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-45"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679067832"><span id="local-6989586621679067842"><span id="local-6989586621679067846"><span class="annot"><span class="annottext">Int -&gt; CppClassHead -&gt; ShowS
+[CppClassHead] -&gt; ShowS
+CppClassHead -&gt; String
+(Int -&gt; CppClassHead -&gt; ShowS)
+-&gt; (CppClassHead -&gt; String)
+-&gt; ([CppClassHead] -&gt; ShowS)
+-&gt; Show CppClassHead
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: Int -&gt; CppClassHead -&gt; ShowS
+showsPrec :: Int -&gt; CppClassHead -&gt; ShowS
+$cshow :: CppClassHead -&gt; String
+show :: CppClassHead -&gt; String
+$cshowList :: [CppClassHead] -&gt; ShowS
+showList :: [CppClassHead] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">data</span><span> </span><span id="CppVariableDeclaration"><span class="annot"><a href="ParserTypes.html#CppVariableDeclaration"><span class="hs-identifier hs-var">CppVariableDeclaration</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CppVariableDeclaration"><span class="annot"><a href="ParserTypes.html#CppVariableDeclaration"><span class="hs-identifier hs-var">CppVariableDeclaration</span></a></span></span><span>
+</span><span id="line-48"></span><span>    </span><span class="hs-special">{</span><span>
+</span><span id="line-49"></span><span>        </span><span id="variableName"><span class="annot"><span class="annottext">CppVariableDeclaration -&gt; String
+</span><a href="ParserTypes.html#variableName"><span class="hs-identifier hs-var hs-var">variableName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-50"></span><span>        </span><span id="variableType"><span class="annot"><span class="annottext">CppVariableDeclaration -&gt; String
+</span><a href="ParserTypes.html#variableType"><span class="hs-identifier hs-var hs-var">variableType</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-51"></span><span>        </span><span id="variableDeclSpecifiers"><span class="annot"><span class="annottext">CppVariableDeclaration -&gt; CppAttributeSpecifier
+</span><a href="ParserTypes.html#variableDeclSpecifiers"><span class="hs-identifier hs-var hs-var">variableDeclSpecifiers</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">]</span><span class="hs-special">,</span><span>
+</span><span id="line-52"></span><span>        </span><span id="variableAttributeSpecifiers"><span class="annot"><span class="annottext">CppVariableDeclaration -&gt; [CppAttributeSpecifier]
+</span><a href="ParserTypes.html#variableAttributeSpecifiers"><span class="hs-identifier hs-var hs-var">variableAttributeSpecifiers</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="ParserTypes.html#CppAttributeSpecifier"><span class="hs-identifier hs-type">CppAttributeSpecifier</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-53"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-54"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679067855"><span id="local-6989586621679067864"><span id="local-6989586621679067868"><span class="annot"><span class="annottext">Int -&gt; CppVariableDeclaration -&gt; ShowS
+[CppVariableDeclaration] -&gt; ShowS
+CppVariableDeclaration -&gt; String
+(Int -&gt; CppVariableDeclaration -&gt; ShowS)
+-&gt; (CppVariableDeclaration -&gt; String)
+-&gt; ([CppVariableDeclaration] -&gt; ShowS)
+-&gt; Show CppVariableDeclaration
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: Int -&gt; CppVariableDeclaration -&gt; ShowS
+showsPrec :: Int -&gt; CppVariableDeclaration -&gt; ShowS
+$cshow :: CppVariableDeclaration -&gt; String
+show :: CppVariableDeclaration -&gt; String
+$cshowList :: [CppVariableDeclaration] -&gt; ShowS
+showList :: [CppVariableDeclaration] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span>
+</span><span id="line-56"></span><span class="hs-keyword">class</span><span> </span><span id="CppAstNode"><span class="annot"><a href="ParserTypes.html#CppAstNode"><span class="hs-identifier hs-var">CppAstNode</span></a></span></span><span> </span><span id="local-6989586621679067870"><span class="annot"><a href="#local-6989586621679067870"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-57"></span><span>    </span><span class="hs-comment">--getAstNodeType :: a -&gt; String</span><span>
+</span><span id="line-58"></span><span>    </span><span id="getChildren"><span class="annot"><a href="ParserTypes.html#getChildren"><span class="hs-identifier hs-type">getChildren</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679067870"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679067870"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-59"></span><span>    </span><span id="setChildren"><span class="annot"><a href="ParserTypes.html#setChildren"><span class="hs-identifier hs-type">setChildren</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679067870"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679067870"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679067870"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-60"></span><span>
+</span><span id="line-61"></span><span class="hs-keyword">class</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="ParserTypes.html#CppAstNode"><span class="hs-identifier hs-type">CppAstNode</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067732"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span id="CppHeader"><span class="annot"><a href="ParserTypes.html#CppHeader"><span class="hs-identifier hs-var">CppHeader</span></a></span></span><span> </span><span id="local-6989586621679067732"><span class="annot"><a href="#local-6989586621679067732"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-62"></span><span>    </span><span id="makeHeader"><span class="annot"><a href="ParserTypes.html#makeHeader"><span class="hs-identifier hs-type">makeHeader</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679067732"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679067732"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-63"></span><span>
+</span><span id="line-64"></span><span class="hs-keyword">class</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="ParserTypes.html#CppAstNode"><span class="hs-identifier hs-type">CppAstNode</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067735"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span id="CppNamespace"><span class="annot"><a href="ParserTypes.html#CppNamespace"><span class="hs-identifier hs-var">CppNamespace</span></a></span></span><span> </span><span id="local-6989586621679067735"><span class="annot"><a href="#local-6989586621679067735"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-65"></span><span>    </span><span id="makeNamespace"><span class="annot"><a href="ParserTypes.html#makeNamespace"><span class="hs-identifier hs-type">makeNamespace</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679067735"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679067735"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-66"></span><span>    </span><span id="getNamespaceName"><span class="annot"><a href="ParserTypes.html#getNamespaceName"><span class="hs-identifier hs-type">getNamespaceName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679067735"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-67"></span><span>
+</span><span id="line-68"></span><span class="hs-keyword">class</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="ParserTypes.html#CppAstNode"><span class="hs-identifier hs-type">CppAstNode</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067737"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span id="CppEnum"><span class="annot"><a href="ParserTypes.html#CppEnum"><span class="hs-identifier hs-var">CppEnum</span></a></span></span><span> </span><span id="local-6989586621679067737"><span class="annot"><a href="#local-6989586621679067737"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-69"></span><span>    </span><span id="makeEnum"><span class="annot"><a href="ParserTypes.html#makeEnum"><span class="hs-identifier hs-type">makeEnum</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="ParserTypes.html#CppEnumHead"><span class="hs-identifier hs-type">CppEnumHead</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679067737"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679067737"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-70"></span><span>    </span><span id="getEnumInfo"><span class="annot"><a href="ParserTypes.html#getEnumInfo"><span class="hs-identifier hs-type">getEnumInfo</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679067737"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="ParserTypes.html#CppEnumHead"><span class="hs-identifier hs-type">CppEnumHead</span></a></span><span>
+</span><span id="line-71"></span><span>
+</span><span id="line-72"></span><span class="hs-keyword">class</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="ParserTypes.html#CppAstNode"><span class="hs-identifier hs-type">CppAstNode</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067739"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span id="CppClass"><span class="annot"><a href="ParserTypes.html#CppClass"><span class="hs-identifier hs-var">CppClass</span></a></span></span><span> </span><span id="local-6989586621679067739"><span class="annot"><a href="#local-6989586621679067739"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-73"></span><span>    </span><span id="makeClass"><span class="annot"><a href="ParserTypes.html#makeClass"><span class="hs-identifier hs-type">makeClass</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="ParserTypes.html#CppClassHead"><span class="hs-identifier hs-type">CppClassHead</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="#local-6989586621679067739"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679067739"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-74"></span><span>    </span><span id="getClassInfo"><span class="annot"><a href="ParserTypes.html#getClassInfo"><span class="hs-identifier hs-type">getClassInfo</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679067739"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="ParserTypes.html#CppClassHead"><span class="hs-identifier hs-type">CppClassHead</span></a></span><span>
+</span><span id="line-75"></span><span>
+</span><span id="line-76"></span><span class="hs-keyword">class</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="ParserTypes.html#CppAstNode"><span class="hs-identifier hs-type">CppAstNode</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067741"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span id="CppEnumerator"><span class="annot"><a href="ParserTypes.html#CppEnumerator"><span class="hs-identifier hs-var">CppEnumerator</span></a></span></span><span> </span><span id="local-6989586621679067741"><span class="annot"><a href="#local-6989586621679067741"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-77"></span><span>    </span><span id="makeEnumerator"><span class="annot"><a href="ParserTypes.html#makeEnumerator"><span class="hs-identifier hs-type">makeEnumerator</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679067741"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-78"></span><span>    </span><span id="getEnumeratorName"><span class="annot"><a href="ParserTypes.html#getEnumeratorName"><span class="hs-identifier hs-type">getEnumeratorName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679067741"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-79"></span><span>    </span><span id="getEnumeratorPostEqTokens"><span class="annot"><a href="ParserTypes.html#getEnumeratorPostEqTokens"><span class="hs-identifier hs-type">getEnumeratorPostEqTokens</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679067741"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-80"></span><span>
+</span><span id="line-81"></span><span class="hs-keyword">class</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="ParserTypes.html#CppAstNode"><span class="hs-identifier hs-type">CppAstNode</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067743"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span id="CppMemberVariable"><span class="annot"><a href="ParserTypes.html#CppMemberVariable"><span class="hs-identifier hs-var">CppMemberVariable</span></a></span></span><span> </span><span id="local-6989586621679067743"><span class="annot"><a href="#local-6989586621679067743"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-82"></span><span>    </span><span id="makeMemberVariable"><span class="annot"><a href="ParserTypes.html#makeMemberVariable"><span class="hs-identifier hs-type">makeMemberVariable</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="ParserTypes.html#CppVariableDeclaration"><span class="hs-identifier hs-type">CppVariableDeclaration</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679067743"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-83"></span><span>    </span><span id="getMemberVariableDeclaration"><span class="annot"><a href="ParserTypes.html#getMemberVariableDeclaration"><span class="hs-identifier hs-type">getMemberVariableDeclaration</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679067743"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="ParserTypes.html#CppVariableDeclaration"><span class="hs-identifier hs-type">CppVariableDeclaration</span></a></span></pre></body></html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE InstanceSigs #-}</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Config</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="ParserTypes.html"><span class="hs-identifier">ParserTypes</span></a></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Set</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Map</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Map</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Map</span></span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">newtype</span><span> </span><span id="ParserGraph"><span class="annot"><a href="Config.html#ParserGraph"><span class="hs-identifier hs-var">ParserGraph</span></a></span></span><span> </span><span id="local-6989586621679067891"><span class="annot"><a href="#local-6989586621679067891"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ParserGraph"><span class="annot"><a href="Config.html#ParserGraph"><span class="hs-identifier hs-var">ParserGraph</span></a></span></span><span> </span><span class="hs-special">{</span><span> </span><span id="parserGraph"><span class="annot"><span class="annottext">forall a.
+ParserGraph a
+-&gt; Map ParserInjectionPoint [ParserGraph a -&gt; Parser a]
+</span><a href="Config.html#parserGraph"><span class="hs-identifier hs-var hs-var">parserGraph</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Map</span></span><span> </span><span class="annot"><a href="Config.html#ParserInjectionPoint"><span class="hs-identifier hs-type">ParserInjectionPoint</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Config.html#ParserGraph"><span class="hs-identifier hs-type">ParserGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067891"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="ParserTypes.html#Parser"><span class="hs-identifier hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067891"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-11"></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">data</span><span> </span><span id="ParserInjectionPoint"><span class="annot"><a href="Config.html#ParserInjectionPoint"><span class="hs-identifier hs-var">ParserInjectionPoint</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Global"><span class="annot"><a href="Config.html#Global"><span class="hs-identifier hs-var">Global</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span id="InjectAt"><span class="annot"><a href="Config.html#InjectAt"><span class="hs-identifier hs-var">InjectAt</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-13"></span><span>    </span><span class="hs-keyword">deriving</span><span class="hs-special">(</span><span id="local-6989586621679067945"><span id="local-6989586621679067950"><span class="annot"><span class="annottext">ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+(ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool)
+-&gt; (ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool)
+-&gt; Eq ParserInjectionPoint
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+$c== :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+== :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+$c/= :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+/= :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679067958"><span id="local-6989586621679067963"><span id="local-6989586621679067967"><span id="local-6989586621679067971"><span id="local-6989586621679067974"><span id="local-6989586621679067977"><span id="local-6989586621679067980"><span class="annot"><span class="annottext">Eq ParserInjectionPoint
+Eq ParserInjectionPoint =&gt;
+(ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Ordering)
+-&gt; (ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool)
+-&gt; (ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool)
+-&gt; (ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool)
+-&gt; (ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool)
+-&gt; (ParserInjectionPoint
+    -&gt; ParserInjectionPoint -&gt; ParserInjectionPoint)
+-&gt; (ParserInjectionPoint
+    -&gt; ParserInjectionPoint -&gt; ParserInjectionPoint)
+-&gt; Ord ParserInjectionPoint
+ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Ordering
+ParserInjectionPoint
+-&gt; ParserInjectionPoint -&gt; ParserInjectionPoint
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+$ccompare :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Ordering
+compare :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Ordering
+$c&lt; :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+&lt; :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+$c&lt;= :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+&lt;= :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+$c&gt; :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+&gt; :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+$c&gt;= :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+&gt;= :: ParserInjectionPoint -&gt; ParserInjectionPoint -&gt; Bool
+$cmax :: ParserInjectionPoint
+-&gt; ParserInjectionPoint -&gt; ParserInjectionPoint
+max :: ParserInjectionPoint
+-&gt; ParserInjectionPoint -&gt; ParserInjectionPoint
+$cmin :: ParserInjectionPoint
+-&gt; ParserInjectionPoint -&gt; ParserInjectionPoint
+min :: ParserInjectionPoint
+-&gt; ParserInjectionPoint -&gt; ParserInjectionPoint
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679067985"><span id="local-6989586621679067992"><span id="local-6989586621679067996"><span class="annot"><span class="annottext">Int -&gt; ParserInjectionPoint -&gt; ShowS
+[ParserInjectionPoint] -&gt; ShowS
+ParserInjectionPoint -&gt; String
+(Int -&gt; ParserInjectionPoint -&gt; ShowS)
+-&gt; (ParserInjectionPoint -&gt; String)
+-&gt; ([ParserInjectionPoint] -&gt; ShowS)
+-&gt; Show ParserInjectionPoint
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: Int -&gt; ParserInjectionPoint -&gt; ShowS
+showsPrec :: Int -&gt; ParserInjectionPoint -&gt; ShowS
+$cshow :: ParserInjectionPoint -&gt; String
+show :: ParserInjectionPoint -&gt; String
+$cshowList :: [ParserInjectionPoint] -&gt; ShowS
+showList :: [ParserInjectionPoint] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">data</span><span> </span><span id="ParserConfig"><span class="annot"><a href="Config.html#ParserConfig"><span class="hs-identifier hs-var">ParserConfig</span></a></span></span><span> </span><span id="local-6989586621679067904"><span class="annot"><a href="#local-6989586621679067904"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ParserConfig"><span class="annot"><a href="Config.html#ParserConfig"><span class="hs-identifier hs-var">ParserConfig</span></a></span></span><span>
+</span><span id="line-16"></span><span>    </span><span class="hs-special">{</span><span>
+</span><span id="line-17"></span><span>        </span><span id="parserName"><span class="annot"><span class="annottext">forall a. ParserConfig a -&gt; String
+</span><a href="Config.html#parserName"><span class="hs-identifier hs-var hs-var">parserName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-18"></span><span>        </span><span id="parser"><span class="annot"><span class="annottext">forall a. ParserConfig a -&gt; String -&gt; ParserGraph a -&gt; Parser a
+</span><a href="Config.html#parser"><span class="hs-identifier hs-var hs-var">parser</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Config.html#ParserGraph"><span class="hs-identifier hs-type">ParserGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067904"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="ParserTypes.html#Parser"><span class="hs-identifier hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067904"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-19"></span><span>        </span><span id="parserInjectionPoints"><span class="annot"><span class="annottext">forall a. ParserConfig a -&gt; Set ParserInjectionPoint
+</span><a href="Config.html#parserInjectionPoints"><span class="hs-identifier hs-var hs-var">parserInjectionPoints</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><a href="Config.html#ParserInjectionPoint"><span class="hs-identifier hs-type">ParserInjectionPoint</span></a></span><span>
+</span><span id="line-20"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-21"></span><span>
+</span><span id="line-22"></span><span class="hs-keyword">instance</span><span>  </span><span id="local-6989586621679067911"><span id="local-6989586621679068006"><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Config.html#ParserConfig"><span class="hs-identifier hs-type">ParserConfig</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067911"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-23"></span><span>    </span><span class="annot"><span class="hs-operator hs-type">(==)</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Config.html#ParserConfig"><span class="hs-identifier hs-type">ParserConfig</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067911"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Config.html#ParserConfig"><span class="hs-identifier hs-type">ParserConfig</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067911"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-24"></span><span>    </span><span id="local-6989586621679068011"><span class="annot"><span class="annottext">ParserConfig a
+</span><a href="#local-6989586621679068011"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679068012"><span class="annot"><span class="annottext">== :: ParserConfig a -&gt; ParserConfig a -&gt; Bool
+</span><span class="hs-operator hs-var hs-var hs-var hs-var">==</span></span></span><span> </span><span id="local-6989586621679068013"><span class="annot"><span class="annottext">ParserConfig a
+</span><a href="#local-6989586621679068013"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ParserConfig a -&gt; String
+forall a. ParserConfig a -&gt; String
+</span><a href="Config.html#parserName"><span class="hs-identifier hs-var">parserName</span></a></span><span> </span><span class="annot"><span class="annottext">ParserConfig a
+</span><a href="#local-6989586621679068011"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">ParserConfig a -&gt; String
+forall a. ParserConfig a -&gt; String
+</span><a href="Config.html#parserName"><span class="hs-identifier hs-var">parserName</span></a></span><span> </span><span class="annot"><span class="annottext">ParserConfig a
+</span><a href="#local-6989586621679068013"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><span id="line-25"></span><span>
+</span><span id="line-26"></span><span class="hs-keyword">instance</span><span>  </span><span id="local-6989586621679067913"><span id="local-6989586621679068017"><span id="local-6989586621679068021"><span id="local-6989586621679068025"><span id="local-6989586621679068028"><span id="local-6989586621679068031"><span id="local-6989586621679068034"><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Config.html#ParserConfig"><span class="hs-identifier hs-type">ParserConfig</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067913"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-27"></span><span>    </span><span class="annot"><span class="hs-operator hs-type">(&lt;=)</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Config.html#ParserConfig"><span class="hs-identifier hs-type">ParserConfig</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067913"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Config.html#ParserConfig"><span class="hs-identifier hs-type">ParserConfig</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067913"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-28"></span><span>    </span><span id="local-6989586621679068039"><span class="annot"><span class="annottext">ParserConfig a
+</span><a href="#local-6989586621679068039"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679068040"><span class="annot"><span class="annottext">&lt;= :: ParserConfig a -&gt; ParserConfig a -&gt; Bool
+</span><span class="hs-operator hs-var hs-var hs-var hs-var">&lt;=</span></span></span><span> </span><span id="local-6989586621679068041"><span class="annot"><span class="annottext">ParserConfig a
+</span><a href="#local-6989586621679068041"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ParserConfig a -&gt; String
+forall a. ParserConfig a -&gt; String
+</span><a href="Config.html#parserName"><span class="hs-identifier hs-var">parserName</span></a></span><span> </span><span class="annot"><span class="annottext">ParserConfig a
+</span><a href="#local-6989586621679068039"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;=</span></span><span> </span><span class="annot"><span class="annottext">ParserConfig a -&gt; String
+forall a. ParserConfig a -&gt; String
+</span><a href="Config.html#parserName"><span class="hs-identifier hs-var">parserName</span></a></span><span> </span><span class="annot"><span class="annottext">ParserConfig a
+</span><a href="#local-6989586621679068041"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span class="hs-keyword">data</span><span> </span><span id="Config"><span class="annot"><a href="Config.html#Config"><span class="hs-identifier hs-var">Config</span></a></span></span><span> </span><span id="local-6989586621679067914"><span class="annot"><a href="#local-6989586621679067914"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Config"><span class="annot"><a href="Config.html#Config"><span class="hs-identifier hs-var">Config</span></a></span></span><span>
+</span><span id="line-31"></span><span>    </span><span class="hs-special">{</span><span>
+</span><span id="line-32"></span><span>        </span><span id="tags"><span class="annot"><span class="annottext">forall a. Config a -&gt; Set String
+</span><a href="Config.html#tags"><span class="hs-identifier hs-var hs-var">tags</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-33"></span><span>        </span><span id="parsers"><span class="annot"><span class="annottext">forall a. Config a -&gt; Set (ParserConfig a)
+</span><a href="Config.html#parsers"><span class="hs-identifier hs-var hs-var">parsers</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Config.html#ParserConfig"><span class="hs-identifier hs-type">ParserConfig</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067914"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span id="local-6989586621679067918"><span class="annot"><a href="Config.html#makeParserGraph"><span class="hs-identifier hs-type">makeParserGraph</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Config.html#ParserConfig"><span class="hs-identifier hs-type">ParserConfig</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067918"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Config.html#ParserGraph"><span class="hs-identifier hs-type">ParserGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067918"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-37"></span><span id="makeParserGraph"><span class="annot"><span class="annottext">makeParserGraph :: forall a. Set (ParserConfig a) -&gt; ParserGraph a
+</span><a href="Config.html#makeParserGraph"><span class="hs-identifier hs-var hs-var">makeParserGraph</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(ParserConfig a -&gt; ParserGraph a -&gt; ParserGraph a)
+-&gt; ParserGraph a -&gt; Set (ParserConfig a) -&gt; ParserGraph a
+forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; Set a -&gt; b
+forall (t :: * -&gt; *) a b.
+Foldable t =&gt;
+(a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b
+</span><span class="hs-identifier hs-var">foldr</span></span><span> </span><span class="annot"><span class="annottext">ParserConfig a -&gt; ParserGraph a -&gt; ParserGraph a
+forall a. ParserConfig a -&gt; ParserGraph a -&gt; ParserGraph a
+</span><a href="Config.html#addToParserGraph"><span class="hs-identifier hs-var">addToParserGraph</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Config.html#ParserGraph"><span class="hs-identifier hs-type">ParserGraph</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">parserGraph :: Map ParserInjectionPoint [ParserGraph a -&gt; Parser a]
+</span><a href="Config.html#parserGraph"><span class="hs-identifier hs-var">parserGraph</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Map ParserInjectionPoint [ParserGraph a -&gt; Parser a]
+forall k a. Map k a
+</span><span class="hs-identifier hs-var">Map.empty</span></span><span> </span><span class="hs-special">}</span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span id="local-6989586621679067923"><span class="annot"><a href="Config.html#addToParserGraph"><span class="hs-identifier hs-type">addToParserGraph</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Config.html#ParserConfig"><span class="hs-identifier hs-type">ParserConfig</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067923"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Config.html#ParserGraph"><span class="hs-identifier hs-type">ParserGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067923"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Config.html#ParserGraph"><span class="hs-identifier hs-type">ParserGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067923"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-40"></span><span id="addToParserGraph"><span class="annot"><span class="annottext">addToParserGraph :: forall a. ParserConfig a -&gt; ParserGraph a -&gt; ParserGraph a
+</span><a href="Config.html#addToParserGraph"><span class="hs-identifier hs-var hs-var">addToParserGraph</span></a></span></span><span> </span><span id="local-6989586621679068052"><span class="annot"><span class="annottext">ParserConfig a
+</span><a href="#local-6989586621679068052"><span class="hs-identifier hs-var">config</span></a></span></span><span> </span><span id="local-6989586621679068053"><span class="annot"><span class="annottext">ParserGraph a
+</span><a href="#local-6989586621679068053"><span class="hs-identifier hs-var">graph</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(ParserInjectionPoint -&gt; ParserGraph a -&gt; ParserGraph a)
+-&gt; ParserGraph a -&gt; Set ParserInjectionPoint -&gt; ParserGraph a
+forall a b. (a -&gt; b -&gt; b) -&gt; b -&gt; Set a -&gt; b
+forall (t :: * -&gt; *) a b.
+Foldable t =&gt;
+(a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b
+</span><span class="hs-identifier hs-var">foldr</span></span><span> </span><span class="annot"><span class="annottext">ParserInjectionPoint -&gt; ParserGraph a -&gt; ParserGraph a
+</span><a href="#local-6989586621679068054"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="annot"><span class="annottext">ParserGraph a
+</span><a href="#local-6989586621679068053"><span class="hs-identifier hs-var">graph</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ParserConfig a -&gt; Set ParserInjectionPoint
+forall a. ParserConfig a -&gt; Set ParserInjectionPoint
+</span><a href="Config.html#parserInjectionPoints"><span class="hs-identifier hs-var">parserInjectionPoints</span></a></span><span> </span><span class="annot"><span class="annottext">ParserConfig a
+</span><a href="#local-6989586621679068052"><span class="hs-identifier hs-var">config</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span>    </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679068054"><span class="annot"><span class="annottext">helper :: ParserInjectionPoint -&gt; ParserGraph a -&gt; ParserGraph a
+</span><a href="#local-6989586621679068054"><span class="hs-identifier hs-var hs-var">helper</span></a></span></span><span> </span><span id="local-6989586621679068056"><span class="annot"><span class="annottext">ParserInjectionPoint
+</span><a href="#local-6989586621679068056"><span class="hs-identifier hs-var">injectionPoint</span></a></span></span><span> </span><span id="local-6989586621679068057"><span class="annot"><span class="annottext">ParserGraph a
+</span><a href="#local-6989586621679068057"><span class="hs-identifier hs-var">graph'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ParserGraph a
+</span><a href="#local-6989586621679068057"><span class="hs-identifier hs-var">graph'</span></a></span><span> </span><span class="hs-special">{</span><span> </span><span class="annot"><a href="Config.html#parserGraph"><span class="hs-identifier hs-var">parserGraph</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Map.insertWith</span></span><span> </span><span class="annot"><span class="hs-operator hs-type">(++)</span></span><span> </span><span class="annot"><a href="#local-6989586621679068056"><span class="hs-identifier hs-type">injectionPoint</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Config.html#parser"><span class="hs-identifier hs-var">parser</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068052"><span class="hs-identifier hs-type">config</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Config.html#parserName"><span class="hs-identifier hs-var">parserName</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068052"><span class="hs-identifier hs-type">config</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Config.html#parserGraph"><span class="hs-identifier hs-var">parserGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068057"><span class="hs-identifier hs-type">graph'</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span id="local-6989586621679067930"><span class="annot"><a href="Config.html#getParsers"><span class="hs-identifier hs-type">getParsers</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Config.html#ParserInjectionPoint"><span class="hs-identifier hs-type">ParserInjectionPoint</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Config.html#ParserGraph"><span class="hs-identifier hs-type">ParserGraph</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067930"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="ParserTypes.html#Parser"><span class="hs-identifier hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679067930"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">]</span></span><span>
+</span><span id="line-44"></span><span id="getParsers"><span class="annot"><span class="annottext">getParsers :: forall a. ParserInjectionPoint -&gt; ParserGraph a -&gt; [Parser a]
+</span><a href="Config.html#getParsers"><span class="hs-identifier hs-var hs-var">getParsers</span></a></span></span><span> </span><span id="local-6989586621679068060"><span class="annot"><span class="annottext">ParserInjectionPoint
+</span><a href="#local-6989586621679068060"><span class="hs-identifier hs-var">injectionPoint</span></a></span></span><span> </span><span id="local-6989586621679068061"><span class="annot"><span class="annottext">ParserGraph a
+</span><a href="#local-6989586621679068061"><span class="hs-identifier hs-var">graph</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Parser a]
+-&gt; ([ParserGraph a -&gt; Parser a] -&gt; [Parser a])
+-&gt; Maybe [ParserGraph a -&gt; Parser a]
+-&gt; [Parser a]
+forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
+</span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">[ParserGraph a -&gt; Parser a] -&gt; [Parser a]
+forall {b}. [ParserGraph a -&gt; b] -&gt; [b]
+</span><a href="#local-6989586621679068063"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe [ParserGraph a -&gt; Parser a]
+</span><a href="#local-6989586621679068064"><span class="hs-identifier hs-var">hit</span></a></span><span>
+</span><span id="line-45"></span><span>    </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679068064"><span class="annot"><span class="annottext">hit :: Maybe [ParserGraph a -&gt; Parser a]
+</span><a href="#local-6989586621679068064"><span class="hs-identifier hs-var hs-var">hit</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ParserInjectionPoint
+-&gt; Map ParserInjectionPoint [ParserGraph a -&gt; Parser a]
+-&gt; Maybe [ParserGraph a -&gt; Parser a]
+forall k a. Ord k =&gt; k -&gt; Map k a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Map.lookup</span></span><span> </span><span class="annot"><span class="annottext">ParserInjectionPoint
+</span><a href="#local-6989586621679068060"><span class="hs-identifier hs-var">injectionPoint</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ParserGraph a
+-&gt; Map ParserInjectionPoint [ParserGraph a -&gt; Parser a]
+forall a.
+ParserGraph a
+-&gt; Map ParserInjectionPoint [ParserGraph a -&gt; Parser a]
+</span><a href="Config.html#parserGraph"><span class="hs-identifier hs-var">parserGraph</span></a></span><span> </span><span class="annot"><span class="annottext">ParserGraph a
+</span><a href="#local-6989586621679068061"><span class="hs-identifier hs-var">graph</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>          </span><span id="local-6989586621679068063"><span class="annot"><span class="annottext">helper :: [ParserGraph a -&gt; b] -&gt; [b]
+</span><a href="#local-6989586621679068063"><span class="hs-identifier hs-var hs-var">helper</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">((ParserGraph a -&gt; b) -&gt; b) -&gt; [ParserGraph a -&gt; b] -&gt; [b]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679068067"><span class="annot"><span class="annottext">ParserGraph a -&gt; b
+</span><a href="#local-6989586621679068067"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">ParserGraph a -&gt; b
+</span><a href="#local-6989586621679068067"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">ParserGraph a
+</span><a href="#local-6989586621679068061"><span class="hs-identifier hs-var">graph</span></a></span><span class="hs-special">)</span></pre></body></html>

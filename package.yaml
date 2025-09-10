@@ -22,8 +22,6 @@ description:         Please see the README on GitHub at <https://github.com/gith
 dependencies:
 - base >= 4.7 && < 5
 - containers
-- filepath
-- directory
 - megaparsec
 
 ghc-options:
@@ -50,6 +48,11 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - CppHeaderTool
+    - filepath
+    - directory
+    - aeson
+    - aeson-pretty
+    - bytestring
 
 tests:
   CppHeaderTool-test:

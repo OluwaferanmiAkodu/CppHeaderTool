@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module CodeGen where
 
 import LexerTypes
@@ -10,6 +12,9 @@ import Util
 import Text.Megaparsec
 import Text.Megaparsec.Byte (lowerChar)
 import Data.Char (toLower)
+import Data.Aeson
+import Data.Aeson.Encode.Pretty
+import qualified Data.ByteString.Lazy.Char8 as BL
 
 {- 
 CppHeaderTool Code Generation Module
@@ -144,6 +149,16 @@ generateNodeCode (EnumNode enumHead children) =
           else
             ""
         ]
+
+generateNodeCode (ClassNode classHead children) =
+    let attributes = getCodeGenAttributes (concat $ classAttributeSpecifiers classHead)
+        enumName = classHeadName classHead
+        baseType = unwords $ map baseTypeSpecifier (classBaseClause classHead)
+    in if hasReflectionAttributes attributes then
+            generateReflectionBoilerplate enumName baseType
+        else
+            ""
+
 generateNodeCode _ = ""
 
 -- | Generates enum to/from string conversion functions
@@ -200,68 +215,47 @@ generateReflectionBoilerplate className parentName = unlines
 
 -- | Generates JSON representation of the AST for debugging
 generateJSON :: [ExampleAstNode] -> String
-generateJSON astNodes = unlines $ filter (not . null) (map generateNodeJSON astNodes)
+generateJSON = BL.unpack . encodePretty--unlines $ filter (not . null) (map generateNodeJSON astNodes)
 
 -- | Generates JSON for a single AST node
-generateNodeJSON :: ExampleAstNode -> String
-generateNodeJSON (ClassNode classHead children) = generateClassJSON classHead children
-generateNodeJSON (EnumNode enumHead children) = generateEnumJSON enumHead children
-generateNodeJSON (MemberVariable varDecl) = generateMemberVariableJSON varDecl
-generateNodeJSON (Enumerator name _) = generateEnumeratorJSON name
-generateNodeJSON _ = "{}"
+instance ToJSON ExampleAstNode where
+    toJSON (ClassNode classHead children) =
+        object
+            [ "astNodeType" .= String "class"
+            , "name" .= classHeadName classHead
+            , "parent" .= unwords (map baseTypeSpecifier (classBaseClause classHead))
+            , "children" .= children
+            , "isReflected" .= hasReflectionAttributes attributes
+            , "isSerialized" .= hasSerializationAttributes attributes
+            ]
+      where
+        attributes = getCodeGenAttributes (concat $ classAttributeSpecifiers classHead)
 
-generateClassJSON :: CppClassHead -> [ExampleAstNode] -> String
-generateClassJSON classHead children = unlines
-    [ "{"
-    , "\t\"astNodeType\": \"class\","
-    , concat ["\t\"name\": \"", classHeadName classHead, "\","]
-    , "\t\"children\": ["
-    , intercalate ",\n" (map (indentJSON 2 . generateNodeJSON) children)
-    , "\t],"
-    , concat ["\t\"isReflected\": ", map toLower (show $ hasReflectionAttributes attributes), ","]
-    , "\t\"isSerialized\": " ++ map toLower (show $ hasSerializationAttributes attributes)
-    , "}"
-    ]
-    where attributes = getCodeGenAttributes (concat $ classAttributeSpecifiers classHead)
+    toJSON (EnumNode enumHead children) =
+        object
+            [ "astNodeType" .= String "enum"
+            , "name" .= enumHeadName enumHead
+            , "parent" .= unwords (map typeSpecifierName (enumBaseClause enumHead))
+            , "children" .= children
+            , "isReflected" .= hasReflectionAttributes attributes
+            , "isSerialized" .= hasSerializationAttributes attributes
+            , "default" .= fromMaybe "" (findDefaultValue attributes)
+            ]
+      where
+        attributes = getCodeGenAttributes (concat $ enumAttributeSpecifiers enumHead)
 
-generateEnumJSON :: CppEnumHead -> [ExampleAstNode] -> String
-generateEnumJSON enumHead children = unlines
-    [ "{"
-    , "\t\"astNodeType\": \"enum\","
-    , concat ["\t\"name\": \"", enumHeadName enumHead, "\","]
-    , "\t\"children\": ["
-    , intercalate ",\n" (map (indentJSON 2 . generateNodeJSON) children)
-    , "\t],"
-    , concat ["\t\"isReflected\": ", map toLower (show $ hasReflectionAttributes attributes), ","]
-    , concat ["\t\"isSerialized\": ", map toLower (show $ hasSerializationAttributes attributes), ","]
-    , case findDefaultValue attributes of
-        Just def -> concat ["\t\"default\": \"", def, "\""]
-        Nothing -> "\t\"default\": null"
-    , "}"
-    ]
-    where attributes = getCodeGenAttributes (concat $ enumAttributeSpecifiers enumHead)
+    toJSON (MemberVariable varDecl) =
+        object
+            [ "astNodeType" .= String "memberVariable"
+            , "name" .= variableName varDecl
+            , "type" .= variableType varDecl
+            ]
 
-generateMemberVariableJSON :: CppVariableDeclaration -> String
-generateMemberVariableJSON varDecl = unlines
-    [ "{"
-    , "\t\"astNodeType\": \"memberVariable\","
-    , concat ["\t\"name\": \"", variableName varDecl, "\","]
-    , concat ["\t\"type\": \"", variableType varDecl, "\""]
-    , "}"
-    ]
-
-generateEnumeratorJSON :: String -> String
-generateEnumeratorJSON name = unlines
-    [ "{"
-    , "\t\"astNodeType\": \"enumerator\","
-    , concat ["\t\"name\": \"", name, "\""]
-    , "}"
-    ]
-
--- | Helper to indent JSON output
-indentJSON :: Int -> String -> String
-indentJSON levels json = unlines $ map (replicate (levels * 4) ' ' ++) (lines json)
-
+    toJSON (Enumerator name _) =
+        object
+            [ "astNodeType" .= String "enumerator"
+            , "name" .= name
+            ]
 -------------------------------------------------------------------------------
 -- UTILITIES
 -------------------------------------------------------------------------------

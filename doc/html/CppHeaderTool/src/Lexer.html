@@ -1,0 +1,440 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE TupleSections #-}</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Lexer</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Lexer.html#lexicalAnalysis"><span class="hs-identifier">lexicalAnalysis</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Constants.html"><span class="hs-identifier">Constants</span></a></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="LexerTypes.html"><span class="hs-identifier">LexerTypes</span></a></span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Util.html"><span class="hs-identifier">Util</span></a></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Megaparsec</span></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Megaparsec.Char</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Void</span></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Char</span></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.List</span></span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Functor</span></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Set</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Set</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Set</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Set</span></span><span>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- === Exported Functions ===</span><span>
+</span><span id="line-19"></span><span>    </span><span>
+</span><span id="line-20"></span><span class="annot"><a href="Lexer.html#lexicalAnalysis"><span class="hs-identifier hs-type">lexicalAnalysis</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Either</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">ParseErrorBundle</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Void</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-21"></span><span id="lexicalAnalysis"><span class="annot"><span class="annottext">lexicalAnalysis :: Set String
+-&gt; String
+-&gt; String
+-&gt; Either (ParseErrorBundle String Void) [CppToken]
+</span><a href="Lexer.html#lexicalAnalysis"><span class="hs-identifier hs-var hs-var">lexicalAnalysis</span></a></span></span><span> </span><span id="local-6989586621679069317"><span class="annot"><span class="annottext">Set String
+</span><a href="#local-6989586621679069317"><span class="hs-identifier hs-var">tags</span></a></span></span><span> </span><span id="local-6989586621679069318"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069318"><span class="hs-identifier hs-var">text</span></a></span></span><span> </span><span id="local-6989586621679069319"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069319"><span class="hs-identifier hs-var">fileName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Parsec Void String [CppToken]
+-&gt; String
+-&gt; String
+-&gt; Either (ParseErrorBundle String Void) [CppToken]
+forall e s a.
+Parsec e s a -&gt; String -&gt; s -&gt; Either (ParseErrorBundle s e) a
+</span><span class="hs-identifier hs-var">parse</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set String -&gt; Parsec Void String [CppToken]
+</span><a href="Lexer.html#tokeniseHeader"><span class="hs-identifier hs-var">tokeniseHeader</span></a></span><span> </span><span class="annot"><span class="annottext">Set String
+</span><a href="#local-6989586621679069317"><span class="hs-identifier hs-var">tags</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069319"><span class="hs-identifier hs-var">fileName</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; String
+</span><a href="Lexer.html#spliceLines"><span class="hs-identifier hs-var">spliceLines</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069318"><span class="hs-identifier hs-var">text</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Either (ParseErrorBundle String Void) [CppToken]
+-&gt; ([CppToken] -&gt; [CppToken])
+-&gt; Either (ParseErrorBundle String Void) [CppToken]
+forall (f :: * -&gt; *) a b. Functor f =&gt; f a -&gt; (a -&gt; b) -&gt; f b
+</span><span class="hs-operator hs-var">&lt;&amp;&gt;</span></span><span> </span><span class="annot"><span class="annottext">[CppToken] -&gt; [CppToken]
+</span><a href="Lexer.html#discardUselessTokens"><span class="hs-identifier hs-var">discardUselessTokens</span></a></span><span>
+</span><span id="line-22"></span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- === Preprocessing ===</span><span>
+</span><span id="line-24"></span><span>
+</span><span id="line-25"></span><span class="annot"><a href="Lexer.html#spliceLines"><span class="hs-identifier hs-type">spliceLines</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-26"></span><span id="spliceLines"><span class="annot"><span class="annottext">spliceLines :: String -&gt; String
+</span><a href="Lexer.html#spliceLines"><span class="hs-identifier hs-var hs-var">spliceLines</span></a></span></span><span> </span><span id="local-6989586621679069325"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069325"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String, String) -&gt; String
+</span><a href="#local-6989586621679069326"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069325"><span class="hs-identifier hs-var">xs</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span>    </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679069326"><span class="annot"><span class="annottext">helper :: (String, String) -&gt; String
+</span><a href="#local-6989586621679069326"><span class="hs-identifier hs-var hs-var">helper</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679069329"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069329"><span class="hs-identifier hs-var">ys</span></a></span></span><span class="hs-special">,</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span class="hs-special">)</span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; String
+forall a. [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">reverse</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069329"><span class="hs-identifier hs-var">ys</span></a></span><span>
+</span><span id="line-28"></span><span>          </span><span class="annot"><a href="#local-6989586621679069326"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679069331"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069331"><span class="hs-identifier hs-var">ys</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679069332"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679069332"><span class="hs-identifier hs-var">z</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679069333"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069333"><span class="hs-identifier hs-var">zs</span></a></span></span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; (String -&gt; String) -&gt; Maybe String -&gt; String
+forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
+</span><span class="hs-identifier hs-var">maybe</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(String, String) -&gt; String
+</span><a href="#local-6989586621679069326"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679069332"><span class="hs-identifier hs-var">z</span></a></span><span class="annot"><span class="annottext">Char -&gt; String -&gt; String
+forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069331"><span class="hs-identifier hs-var">ys</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069333"><span class="hs-identifier hs-var">zs</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(String, String) -&gt; String
+</span><a href="#local-6989586621679069326"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="annot"><span class="annottext">((String, String) -&gt; String)
+-&gt; (String -&gt; (String, String)) -&gt; String -&gt; String
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069331"><span class="hs-identifier hs-var">ys</span></a></span><span class="hs-special">,</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; String -&gt; Maybe String
+forall a. Eq a =&gt; [a] -&gt; [a] -&gt; Maybe [a]
+</span><span class="hs-identifier hs-var">stripPrefix</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;\\\n&quot;</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069333"><span class="hs-identifier hs-var">zs</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- === Postprocessing ===</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="annot"><a href="Lexer.html#discardUselessTokens"><span class="hs-identifier hs-type">discardUselessTokens</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-33"></span><span id="discardUselessTokens"><span class="annot"><span class="annottext">discardUselessTokens :: [CppToken] -&gt; [CppToken]
+</span><a href="Lexer.html#discardUselessTokens"><span class="hs-identifier hs-var hs-var">discardUselessTokens</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(CppToken -&gt; Bool) -&gt; [CppToken] -&gt; [CppToken]
+forall a. (a -&gt; Bool) -&gt; [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">filter</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool
+</span><span class="hs-identifier hs-var">not</span></span><span> </span><span class="annot"><span class="annottext">(Bool -&gt; Bool) -&gt; (CppToken -&gt; Bool) -&gt; CppToken -&gt; Bool
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">CppToken -&gt; Bool
+</span><a href="#local-6989586621679069338"><span class="hs-identifier hs-var">helper</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span>    </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679069338"><span class="annot"><span class="annottext">helper :: CppToken -&gt; Bool
+</span><a href="#local-6989586621679069338"><span class="hs-identifier hs-var hs-var">helper</span></a></span></span><span> </span><span class="annot"><span class="annottext">CppToken
+</span><a href="LexerTypes.html#Whitespace"><span class="hs-identifier hs-var">Whitespace</span></a></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">True</span></span><span>
+</span><span id="line-35"></span><span>          </span><span class="annot"><a href="#local-6989586621679069338"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="annot"><span class="annottext">CppToken
+</span><a href="LexerTypes.html#Preprocessor"><span class="hs-identifier hs-var">Preprocessor</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">True</span></span><span>
+</span><span id="line-36"></span><span>          </span><span class="annot"><a href="#local-6989586621679069338"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="LexerTypes.html#Comment"><span class="hs-identifier hs-type">Comment</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">True</span></span><span>
+</span><span id="line-37"></span><span>          </span><span class="annot"><a href="#local-6989586621679069338"><span class="hs-identifier hs-var">helper</span></a></span><span> </span><span class="annot"><span class="annottext">CppToken
+</span><span class="hs-identifier">_</span></span><span>            </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">False</span></span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- === Tokenisers ===</span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="annot"><a href="Lexer.html#tokeniseKeyword"><span class="hs-identifier hs-type">tokeniseKeyword</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="LexerTypes.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span>
+</span><span id="line-42"></span><span id="tokeniseKeyword"><span class="annot"><span class="annottext">tokeniseKeyword :: (String -&gt; CppToken) -&gt; String -&gt; Lexer CppToken
+</span><a href="Lexer.html#tokeniseKeyword"><span class="hs-identifier hs-var hs-var">tokeniseKeyword</span></a></span></span><span> </span><span id="local-6989586621679069343"><span class="annot"><span class="annottext">String -&gt; CppToken
+</span><a href="#local-6989586621679069343"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679069344"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069344"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-43"></span><span>    </span><span class="annot"><span class="annottext">Tokens String
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Tokens String -&gt; ParsecT Void String Identity (Tokens String)
+forall e s (m :: * -&gt; *).
+MonadParsec e s m =&gt;
+Tokens s -&gt; m (Tokens s)
+</span><span class="hs-identifier hs-var">chunk</span></span><span> </span><span class="annot"><span class="annottext">String
+Tokens String
+</span><a href="#local-6989586621679069344"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-44"></span><span>    </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+-&gt; ParsecT Void String Identity ()
+forall a.
+ParsecT Void String Identity a -&gt; ParsecT Void String Identity ()
+forall e s (m :: * -&gt; *) a. MonadParsec e s m =&gt; m a -&gt; m ()
+</span><span class="hs-identifier hs-var">notFollowedBy</span></span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *).
+(MonadParsec e s m, Token s ~ Char) =&gt;
+m (Token s)
+</span><span class="hs-identifier hs-var">alphaNumChar</span></span><span>
+</span><span id="line-45"></span><span>    </span><span class="annot"><span class="annottext">CppToken -&gt; Lexer CppToken
+forall a. a -&gt; ParsecT Void String Identity a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">(CppToken -&gt; Lexer CppToken) -&gt; CppToken -&gt; Lexer CppToken
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; CppToken
+</span><a href="#local-6989586621679069343"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069344"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="annot"><a href="Lexer.html#tokenisePunctuator"><span class="hs-identifier hs-type">tokenisePunctuator</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Char</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="LexerTypes.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span>
+</span><span id="line-48"></span><span id="tokenisePunctuator"><span class="annot"><span class="annottext">tokenisePunctuator :: (Char -&gt; CppToken) -&gt; Char -&gt; Lexer CppToken
+</span><a href="Lexer.html#tokenisePunctuator"><span class="hs-identifier hs-var hs-var">tokenisePunctuator</span></a></span></span><span> </span><span id="local-6989586621679069349"><span class="annot"><span class="annottext">Char -&gt; CppToken
+</span><a href="#local-6989586621679069349"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679069350"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679069350"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-49"></span><span>    </span><span class="annot"><span class="annottext">Token String
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Token String -&gt; ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *).
+MonadParsec e s m =&gt;
+Token s -&gt; m (Token s)
+</span><span class="hs-identifier hs-var">single</span></span><span> </span><span class="annot"><span class="annottext">Char
+Token String
+</span><a href="#local-6989586621679069350"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-50"></span><span>    </span><span class="annot"><span class="annottext">CppToken -&gt; Lexer CppToken
+forall a. a -&gt; ParsecT Void String Identity a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">(CppToken -&gt; Lexer CppToken) -&gt; CppToken -&gt; Lexer CppToken
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; CppToken
+</span><a href="#local-6989586621679069349"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679069350"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span><span class="annot"><a href="Lexer.html#tokenisePreprocessor"><span class="hs-identifier hs-type">tokenisePreprocessor</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="LexerTypes.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span>
+</span><span id="line-53"></span><span id="tokenisePreprocessor"><span class="annot"><span class="annottext">tokenisePreprocessor :: Lexer CppToken
+</span><a href="Lexer.html#tokenisePreprocessor"><span class="hs-identifier hs-var hs-var">tokenisePreprocessor</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-54"></span><span>    </span><span class="annot"><span class="annottext">Token String
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Token String -&gt; ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *).
+MonadParsec e s m =&gt;
+Token s -&gt; m (Token s)
+</span><span class="hs-identifier hs-var">single</span></span><span> </span><span class="annot"><span class="annottext">Char
+Token String
+</span><span class="hs-char">'#'</span></span><span>
+</span><span id="line-55"></span><span>    </span><span class="annot"><span class="annottext">[Token String]
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity (Token String)
+-&gt; ParsecT Void String Identity [Token String]
+forall (m :: * -&gt; *) a. MonadPlus m =&gt; m a -&gt; m [a]
+</span><span class="hs-identifier hs-var">many</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Token String -&gt; ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *).
+MonadParsec e s m =&gt;
+Token s -&gt; m (Token s)
+</span><span class="hs-identifier hs-var">anySingleBut</span></span><span> </span><span class="annot"><span class="annottext">Char
+Token String
+</span><span class="hs-char">'\n'</span></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span>    </span><span class="annot"><span class="annottext">CppToken -&gt; Lexer CppToken
+forall a. a -&gt; ParsecT Void String Identity a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">CppToken
+</span><a href="LexerTypes.html#Preprocessor"><span class="hs-identifier hs-var">Preprocessor</span></a></span><span>
+</span><span id="line-57"></span><span>
+</span><span id="line-58"></span><span class="annot"><a href="Lexer.html#tokeniseSingleLineComment"><span class="hs-identifier hs-type">tokeniseSingleLineComment</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="LexerTypes.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span>
+</span><span id="line-59"></span><span id="tokeniseSingleLineComment"><span class="annot"><span class="annottext">tokeniseSingleLineComment :: Lexer CppToken
+</span><a href="Lexer.html#tokeniseSingleLineComment"><span class="hs-identifier hs-var hs-var">tokeniseSingleLineComment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-60"></span><span>    </span><span class="annot"><span class="annottext">Tokens String
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Tokens String -&gt; ParsecT Void String Identity (Tokens String)
+forall e s (m :: * -&gt; *).
+MonadParsec e s m =&gt;
+Tokens s -&gt; m (Tokens s)
+</span><span class="hs-identifier hs-var">chunk</span></span><span> </span><span class="annot"><span class="annottext">String
+Tokens String
+</span><span class="hs-string">&quot;//&quot;</span></span><span>
+</span><span id="line-61"></span><span>    </span><span id="local-6989586621679069356"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069356"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+-&gt; ParsecT Void String Identity String
+forall (m :: * -&gt; *) a. MonadPlus m =&gt; m a -&gt; m [a]
+</span><span class="hs-identifier hs-var">many</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Token String -&gt; ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *).
+MonadParsec e s m =&gt;
+Token s -&gt; m (Token s)
+</span><span class="hs-identifier hs-var">anySingleBut</span></span><span> </span><span class="annot"><span class="annottext">Char
+Token String
+</span><span class="hs-char">'\n'</span></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span>    </span><span class="annot"><span class="annottext">CppToken -&gt; Lexer CppToken
+forall a. a -&gt; ParsecT Void String Identity a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">(CppToken -&gt; Lexer CppToken) -&gt; CppToken -&gt; Lexer CppToken
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; CppToken
+</span><a href="LexerTypes.html#Comment"><span class="hs-identifier hs-var">Comment</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069356"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><span id="line-63"></span><span>
+</span><span id="line-64"></span><span class="annot"><a href="Lexer.html#tokeniseMultiLineComment"><span class="hs-identifier hs-type">tokeniseMultiLineComment</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="LexerTypes.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span>
+</span><span id="line-65"></span><span id="tokeniseMultiLineComment"><span class="annot"><span class="annottext">tokeniseMultiLineComment :: Lexer CppToken
+</span><a href="Lexer.html#tokeniseMultiLineComment"><span class="hs-identifier hs-var hs-var">tokeniseMultiLineComment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-66"></span><span>    </span><span class="annot"><span class="annottext">Tokens String
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Tokens String -&gt; ParsecT Void String Identity (Tokens String)
+forall e s (m :: * -&gt; *).
+MonadParsec e s m =&gt;
+Tokens s -&gt; m (Tokens s)
+</span><span class="hs-identifier hs-var">chunk</span></span><span> </span><span class="annot"><span class="annottext">String
+Tokens String
+</span><span class="hs-string">&quot;/*&quot;</span></span><span>
+</span><span id="line-67"></span><span>    </span><span id="local-6989586621679069358"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069358"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+-&gt; ParsecT Void String Identity (Tokens String)
+-&gt; ParsecT Void String Identity String
+forall (m :: * -&gt; *) a end. MonadPlus m =&gt; m a -&gt; m end -&gt; m [a]
+</span><span class="hs-identifier hs-var">manyTill</span></span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *). MonadParsec e s m =&gt; m (Token s)
+</span><span class="hs-identifier hs-var">anySingle</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Tokens String -&gt; ParsecT Void String Identity (Tokens String)
+forall e s (m :: * -&gt; *).
+MonadParsec e s m =&gt;
+Tokens s -&gt; m (Tokens s)
+</span><span class="hs-identifier hs-var">chunk</span></span><span> </span><span class="annot"><span class="annottext">String
+Tokens String
+</span><span class="hs-string">&quot;*/&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span>    </span><span class="annot"><span class="annottext">CppToken -&gt; Lexer CppToken
+forall a. a -&gt; ParsecT Void String Identity a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">(CppToken -&gt; Lexer CppToken) -&gt; CppToken -&gt; Lexer CppToken
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; CppToken
+</span><a href="LexerTypes.html#Comment"><span class="hs-identifier hs-var">Comment</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069358"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><span id="line-69"></span><span>
+</span><span id="line-70"></span><span class="annot"><a href="Lexer.html#tokeniseDigit"><span class="hs-identifier hs-type">tokeniseDigit</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="LexerTypes.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span>
+</span><span id="line-71"></span><span id="tokeniseDigit"><span class="annot"><span class="annottext">tokeniseDigit :: Lexer CppToken
+</span><a href="Lexer.html#tokeniseDigit"><span class="hs-identifier hs-var hs-var">tokeniseDigit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *).
+(MonadParsec e s m, Token s ~ Char) =&gt;
+m (Token s)
+</span><span class="hs-identifier hs-var">digitChar</span></span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+-&gt; (Char -&gt; CppToken) -&gt; Lexer CppToken
+forall (f :: * -&gt; *) a b. Functor f =&gt; f a -&gt; (a -&gt; b) -&gt; f b
+</span><span class="hs-operator hs-var">&lt;&amp;&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CppToken
+</span><a href="LexerTypes.html#Digit"><span class="hs-identifier hs-var">Digit</span></a></span><span> </span><span class="annot"><span class="annottext">(Int -&gt; CppToken) -&gt; (Char -&gt; Int) -&gt; Char -&gt; CppToken
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Int
+</span><span class="hs-identifier hs-var">digitToInt</span></span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span>
+</span><span id="line-73"></span><span class="annot"><a href="Lexer.html#tokeniseIdentifier"><span class="hs-identifier hs-type">tokeniseIdentifier</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="LexerTypes.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span>
+</span><span id="line-74"></span><span id="tokeniseIdentifier"><span class="annot"><span class="annottext">tokeniseIdentifier :: Lexer CppToken
+</span><a href="Lexer.html#tokeniseIdentifier"><span class="hs-identifier hs-var hs-var">tokeniseIdentifier</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-75"></span><span>    </span><span id="local-6989586621679069366"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679069366"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *).
+(MonadParsec e s m, Token s ~ Char) =&gt;
+m (Token s)
+</span><span class="hs-identifier hs-var">letterChar</span></span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+-&gt; ParsecT Void String Identity Char
+-&gt; ParsecT Void String Identity Char
+forall a.
+ParsecT Void String Identity a
+-&gt; ParsecT Void String Identity a -&gt; ParsecT Void String Identity a
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Token String -&gt; ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *).
+MonadParsec e s m =&gt;
+Token s -&gt; m (Token s)
+</span><span class="hs-identifier hs-var">single</span></span><span> </span><span class="annot"><span class="annottext">Char
+Token String
+</span><span class="hs-char">'_'</span></span><span>
+</span><span id="line-76"></span><span>    </span><span id="local-6989586621679069369"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069369"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+-&gt; ParsecT Void String Identity String
+forall (m :: * -&gt; *) a. MonadPlus m =&gt; m a -&gt; m [a]
+</span><span class="hs-identifier hs-var">many</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *).
+(MonadParsec e s m, Token s ~ Char) =&gt;
+m (Token s)
+</span><span class="hs-identifier hs-var">alphaNumChar</span></span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+-&gt; ParsecT Void String Identity Char
+-&gt; ParsecT Void String Identity Char
+forall a.
+ParsecT Void String Identity a
+-&gt; ParsecT Void String Identity a -&gt; ParsecT Void String Identity a
+forall (f :: * -&gt; *) a. Alternative f =&gt; f a -&gt; f a -&gt; f a
+</span><span class="hs-operator hs-var">&lt;|&gt;</span></span><span> </span><span class="annot"><span class="annottext">Token String -&gt; ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *).
+MonadParsec e s m =&gt;
+Token s -&gt; m (Token s)
+</span><span class="hs-identifier hs-var">single</span></span><span> </span><span class="annot"><span class="annottext">Char
+Token String
+</span><span class="hs-char">'_'</span></span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span>    </span><span class="annot"><span class="annottext">CppToken -&gt; Lexer CppToken
+forall a. a -&gt; ParsecT Void String Identity a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">(CppToken -&gt; Lexer CppToken) -&gt; CppToken -&gt; Lexer CppToken
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; CppToken
+</span><a href="LexerTypes.html#Identifier"><span class="hs-identifier hs-var">Identifier</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679069366"><span class="hs-identifier hs-var">x</span></a></span><span class="annot"><span class="annottext">Char -&gt; String -&gt; String
+forall a. a -&gt; [a] -&gt; [a]
+</span><span class="hs-glyph hs-var">:</span></span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679069369"><span class="hs-identifier hs-var">xs</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span>
+</span><span id="line-79"></span><span class="annot"><a href="Lexer.html#tokeniseWhitespace"><span class="hs-identifier hs-type">tokeniseWhitespace</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="LexerTypes.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span>
+</span><span id="line-80"></span><span id="tokeniseWhitespace"><span class="annot"><span class="annottext">tokeniseWhitespace :: Lexer CppToken
+</span><a href="Lexer.html#tokeniseWhitespace"><span class="hs-identifier hs-var hs-var">tokeniseWhitespace</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-81"></span><span>    </span><span class="annot"><span class="annottext">String
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+-&gt; ParsecT Void String Identity String
+forall (m :: * -&gt; *) a. MonadPlus m =&gt; m a -&gt; m [a]
+</span><span class="hs-identifier hs-var">some</span></span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity Char
+ParsecT Void String Identity (Token String)
+forall e s (m :: * -&gt; *).
+(MonadParsec e s m, Token s ~ Char) =&gt;
+m (Token s)
+</span><span class="hs-identifier hs-var">spaceChar</span></span><span>
+</span><span id="line-82"></span><span>    </span><span class="annot"><span class="annottext">CppToken -&gt; Lexer CppToken
+forall a. a -&gt; ParsecT Void String Identity a
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">CppToken
+</span><a href="LexerTypes.html#Whitespace"><span class="hs-identifier hs-var">Whitespace</span></a></span><span>
+</span><span id="line-83"></span><span>
+</span><span id="line-84"></span><span class="annot"><a href="Lexer.html#tokeniseHeader"><span class="hs-identifier hs-type">tokeniseHeader</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="LexerTypes.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-85"></span><span id="tokeniseHeader"><span class="annot"><span class="annottext">tokeniseHeader :: Set String -&gt; Parsec Void String [CppToken]
+</span><a href="Lexer.html#tokeniseHeader"><span class="hs-identifier hs-var hs-var">tokeniseHeader</span></a></span></span><span> </span><span id="local-6989586621679069374"><span class="annot"><span class="annottext">Set String
+</span><a href="#local-6989586621679069374"><span class="hs-identifier hs-var">tags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Set String -&gt; [Lexer CppToken]
+</span><a href="Lexer.html#tokenisers"><span class="hs-identifier hs-var">tokenisers</span></a></span><span> </span><span class="annot"><span class="annottext">Set String
+</span><a href="#local-6989586621679069374"><span class="hs-identifier hs-var">tags</span></a></span><span> </span><span class="annot"><span class="annottext">[Lexer CppToken]
+-&gt; ParsecT Void String Identity () -&gt; Parsec Void String [CppToken]
+forall a b c d.
+(Ord a, Stream b) =&gt;
+[Parsec a b c] -&gt; Parsec a b d -&gt; Parsec a b [c]
+</span><a href="Util.html#%3E%3E%7C"><span class="hs-operator hs-var">&gt;&gt;|</span></a></span><span> </span><span class="annot"><span class="annottext">ParsecT Void String Identity ()
+forall e s (m :: * -&gt; *). MonadParsec e s m =&gt; m ()
+</span><span class="hs-identifier hs-var">eof</span></span><span>
+</span><span id="line-86"></span><span>
+</span><span id="line-87"></span><span class="annot"><a href="Lexer.html#tokenisers"><span class="hs-identifier hs-type">tokenisers</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Set</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="LexerTypes.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="LexerTypes.html#CppToken"><span class="hs-identifier hs-type">CppToken</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-88"></span><span id="tokenisers"><span class="annot"><span class="annottext">tokenisers :: Set String -&gt; [Lexer CppToken]
+</span><a href="Lexer.html#tokenisers"><span class="hs-identifier hs-var hs-var">tokenisers</span></a></span></span><span> </span><span id="local-6989586621679069378"><span class="annot"><span class="annottext">Set String
+</span><a href="#local-6989586621679069378"><span class="hs-identifier hs-var">tags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[[Lexer CppToken]] -&gt; [Lexer CppToken]
+forall (t :: * -&gt; *) a. Foldable t =&gt; t [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">concat</span></span><span>
+</span><span id="line-89"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Lexer CppToken
+</span><a href="Lexer.html#tokenisePreprocessor"><span class="hs-identifier hs-var">tokenisePreprocessor</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Lexer CppToken
+</span><a href="Lexer.html#tokeniseSingleLineComment"><span class="hs-identifier hs-var">tokeniseSingleLineComment</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Lexer CppToken
+</span><a href="Lexer.html#tokeniseMultiLineComment"><span class="hs-identifier hs-var">tokeniseMultiLineComment</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-90"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">((String -&gt; CppToken, String) -&gt; Lexer CppToken)
+-&gt; [(String -&gt; CppToken, String)] -&gt; [Lexer CppToken]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">((String -&gt; CppToken) -&gt; String -&gt; Lexer CppToken)
+-&gt; (String -&gt; CppToken, String) -&gt; Lexer CppToken
+forall a b c. (a -&gt; b -&gt; c) -&gt; (a, b) -&gt; c
+</span><span class="hs-identifier hs-var">uncurry</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; CppToken) -&gt; String -&gt; Lexer CppToken
+</span><a href="Lexer.html#tokeniseKeyword"><span class="hs-identifier hs-var">tokeniseKeyword</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([(String -&gt; CppToken, String)] -&gt; [Lexer CppToken])
+-&gt; [(String -&gt; CppToken, String)] -&gt; [Lexer CppToken]
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">((String -&gt; CppToken, String)
+ -&gt; (String -&gt; CppToken, String) -&gt; Ordering)
+-&gt; [(String -&gt; CppToken, String)] -&gt; [(String -&gt; CppToken, String)]
+forall a. (a -&gt; a -&gt; Ordering) -&gt; [a] -&gt; [a]
+</span><span class="hs-identifier hs-var">sortBy</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; CppToken, String)
+-&gt; (String -&gt; CppToken, String) -&gt; Ordering
+forall {t :: * -&gt; *} {t :: * -&gt; *} {a} {a} {a} {a}.
+(Foldable t, Foldable t) =&gt;
+(a, t a) -&gt; (a, t a) -&gt; Ordering
+</span><a href="#local-6989586621679069382"><span class="hs-identifier hs-var">comparison</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(String -&gt; (String -&gt; CppToken, String))
+-&gt; [String] -&gt; [(String -&gt; CppToken, String)]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; CppToken
+</span><a href="LexerTypes.html#Keyword"><span class="hs-identifier hs-var">Keyword</span></a></span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">[String]
+</span><a href="Constants.html#keywords"><span class="hs-identifier hs-var">keywords</span></a></span><span> </span><span class="annot"><span class="annottext">[(String -&gt; CppToken, String)]
+-&gt; [(String -&gt; CppToken, String)] -&gt; [(String -&gt; CppToken, String)]
+forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; (String -&gt; CppToken, String))
+-&gt; [String] -&gt; [(String -&gt; CppToken, String)]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; CppToken
+</span><a href="LexerTypes.html#Tag"><span class="hs-identifier hs-var">Tag</span></a></span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Set String -&gt; [String]
+forall a. Set a -&gt; [a]
+</span><span class="hs-identifier hs-var">Set.toList</span></span><span> </span><span class="annot"><span class="annottext">Set String
+</span><a href="#local-6989586621679069378"><span class="hs-identifier hs-var">tags</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-91"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Lexer CppToken) -&gt; String -&gt; [Lexer CppToken]
+forall a b. (a -&gt; b) -&gt; [a] -&gt; [b]
+</span><span class="hs-identifier hs-var">map</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Char -&gt; CppToken) -&gt; Char -&gt; Lexer CppToken
+</span><a href="Lexer.html#tokenisePunctuator"><span class="hs-identifier hs-var">tokenisePunctuator</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; CppToken
+</span><a href="LexerTypes.html#Punctuator"><span class="hs-identifier hs-var">Punctuator</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="Constants.html#punctuators"><span class="hs-identifier hs-var">punctuators</span></a></span><span>
+</span><span id="line-92"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Lexer CppToken
+</span><a href="Lexer.html#tokeniseIdentifier"><span class="hs-identifier hs-var">tokeniseIdentifier</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Lexer CppToken
+</span><a href="Lexer.html#tokeniseDigit"><span class="hs-identifier hs-var">tokeniseDigit</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Lexer CppToken
+</span><a href="Lexer.html#tokeniseWhitespace"><span class="hs-identifier hs-var">tokeniseWhitespace</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-93"></span><span>    </span><span class="hs-special">]</span><span>
+</span><span id="line-94"></span><span>    </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679069382"><span class="annot"><span class="annottext">comparison :: (a, t a) -&gt; (a, t a) -&gt; Ordering
+</span><a href="#local-6989586621679069382"><span class="hs-identifier hs-var hs-var">comparison</span></a></span></span><span> </span><span id="local-6989586621679069395"><span class="annot"><span class="annottext">(a, t a)
+</span><a href="#local-6989586621679069395"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679069396"><span class="annot"><span class="annottext">(a, t a)
+</span><a href="#local-6989586621679069396"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">t a -&gt; Int
+forall a. t a -&gt; Int
+forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
+</span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(a, t a) -&gt; t a
+forall a b. (a, b) -&gt; b
+</span><span class="hs-identifier hs-var">snd</span></span><span> </span><span class="annot"><span class="annottext">(a, t a)
+</span><a href="#local-6989586621679069395"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">t a -&gt; Int
+forall a. t a -&gt; Int
+forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
+</span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(a, t a) -&gt; t a
+forall a b. (a, b) -&gt; b
+</span><span class="hs-identifier hs-var">snd</span></span><span> </span><span class="annot"><span class="annottext">(a, t a)
+</span><a href="#local-6989586621679069396"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Ordering
+</span><span class="hs-identifier hs-var">GT</span></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Ordering
+</span><span class="hs-identifier hs-var">LT</span></span></pre></body></html>
