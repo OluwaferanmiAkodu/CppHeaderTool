@@ -1,0 +1,4 @@
+.stack-work/
+example/build/
+example/src/generated
+*~
