@@ -1,8 +1,8 @@
-# 🛠️ CppHeaderTool  
+# CppHeaderTool  
 > **Lightweight C++ Header Parser & Boilerplate Generator**  
 > Built with [Haskell](https://www.haskell.org/) + [Megaparsec](https://hackage.haskell.org/package/megaparsec)  
 
-## 📋 Description  
+## Description  
 **CppHeaderTool** is a Haskell-based framework for parsing C++ header files and generating boilerplate code.  
 
 Writing boilerplate in C++ is a **time-consuming and repetitive process**. While other languages provide reflection or annotation-based tools (e.g., Java Annotations, Project Lombok), C++ has no built-in equivalent. Most existing solutions rely on full compiler frontends such as **libclang**, which can feel like unnecessary overkill for simple code generation tasks.  
@@ -11,25 +11,25 @@ CppHeaderTool instead provides a **lightweight, flexible parsing framework**. Us
 
 ---
 
-## 🎮 Features  
+## Features  
 
-### ✅ Core Functionality  
+### Core Functionality  
 - Parse **enum declarations** and their enumerators.  
 - Parse **class** and **struct** declarations along with member variables.  
 - Represent header file structure as a simplified **AST**.  
 - Dump parsed results to **JSON** for inspection or further tooling.  
 
-### ⚠️ Current Limitations  
+### Current Limitations  
 - Function declarations are not extracted.  
 - Function declarations may be misidentified as member variables.  
 
-### ✨ Design Philosophy  
+### Design Philosophy  
 - **Ignore what doesn’t matter**: unrecognized tokens are skipped rather than causing parse errors.  
 - **Extensible**: parsers can be *injected* at different stages to support new language features when needed.  
 
 ---
 
-## 📸 Demonstrations  
+## Demonstrations  
 
 ### Example Workflow  
 1. Input C++ header:  
@@ -89,7 +89,7 @@ CppHeaderTool instead provides a **lightweight, flexible parsing framework**. Us
     }
    ]
    ```
-## 🛠️ Technologies  
+## Technologies  
 
 - **Language**: Haskell (GHC 9.x)  
 
@@ -99,7 +99,7 @@ CppHeaderTool instead provides a **lightweight, flexible parsing framework**. Us
 
 - **Tools**: VS Code, Haskell Language Server, Stack.
 
-## 📂 Repository Structure  
+## Repository Structure  
 ```plaintext
 ├── app/          # Example app: generate code from parsed AST
 ├── example/      # Example CMake integration
@@ -108,9 +108,9 @@ CppHeaderTool instead provides a **lightweight, flexible parsing framework**. Us
 ├── stack.yaml    # Stack configuration
 └── README.md     # This file
 ```
-## 🚀 Getting Started
+## Getting Started
 
-### 🔧 Prerequisites
+### Prerequisites
 
 - Follow the instructions for installing ghcup [on the Haskell.org website](https://www.haskell.org/ghcup/). Answer A
 then Y then Y to the three prompts.
@@ -119,7 +119,7 @@ then Y then Y to the three prompts.
 will automatically initialise the toolchain once you open a Haskell file in a properlyconfigured project folder. If not using VSCode, please install ghc version 9.4.8;
 and stack and cabal recommended versions according to ghcup.
 
-### 🏃‍♂ Running
+### Running
 
 - Clone the repository
 
@@ -129,7 +129,7 @@ and stack and cabal recommended versions according to ghcup.
   - execute `stack run -- --code <file-path>` to print the generated c++ to the console
   - execute `stack run -- --code -o <output-path> <file-path>` to save the generated c++ to a directory
 
-### 🏗️ CMake Example
+### CMake Example
 
 - Navigate to the root directory
 - Execute the command `stack build`
@@ -137,7 +137,7 @@ and stack and cabal recommended versions according to ghcup.
 - execute `cmake -B build -DGENERATE_CODE_AT_BUILD=ON`
 - execute `cmake --build build`
     
-## ⚠️ Disclaimer  
+## Disclaimer  
 
 - This project is a **work in progress** and not a full C++ parser.  
 - It is intended for **boilerplate code generation**, not full semantic analysis.   
